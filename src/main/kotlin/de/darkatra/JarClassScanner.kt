@@ -27,6 +27,6 @@ class JarClassScanner(
 			// obtain the metadata reader
 			.map { resource -> metadataReaderFactory.getMetadataReader(resource) }
 			// apply all include and exclude filters
-			.filter(this::isCandidateComponent)
+			.filter(this::isCandidate)
 	}
 }

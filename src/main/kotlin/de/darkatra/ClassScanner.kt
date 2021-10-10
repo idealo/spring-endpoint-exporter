@@ -18,7 +18,7 @@ abstract class ClassScanner(
 
 	abstract fun scan(entrypoint: Path): List<MetadataReader>
 
-	protected fun isCandidateComponent(metadataReader: MetadataReader): Boolean {
+	protected fun isCandidate(metadataReader: MetadataReader): Boolean {
 
 		// filter out all classes that match any exclude filters
 		if (this.excludeFilters.any { it.match(metadataReader, metadataReaderFactory) }) {
@@ -27,7 +27,6 @@ abstract class ClassScanner(
 
 		// only include classes that match any include filter
 		if (this.includeFilters.any { it.match(metadataReader, metadataReaderFactory) }) {
-			// TODO: @ConditionalOnX logic via: ConditionEvaluator::shouldSkip
 			return true
 		}
 

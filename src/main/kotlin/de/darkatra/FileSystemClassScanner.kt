@@ -21,13 +21,14 @@ class FileSystemClassScanner(
 	override fun scan(entrypoint: Path): List<MetadataReader> {
 
 		// pattern to find all class files in a directory
-		val resourcePattern = entrypoint.resolve("./**/*.class").normalize().pathString
+		// note: Path.resolve with wildcards (aka. *) does not work on windows
+		val resourcePattern = entrypoint.normalize().pathString + "/**/*.class"
 
 		// get the resources
 		return resourcePatternResolver.getResources(resourcePattern)
 			// obtain the metadata reader
 			.map { resource -> metadataReaderFactory.getMetadataReader(resource) }
 			// apply all include and exclude filters
-			.filter(this::isCandidateComponent)
+			.filter(this::isCandidate)
 	}
 }
