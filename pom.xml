@@ -13,7 +13,7 @@
 
 	<groupId>de.darkatra</groupId>
 	<artifactId>spring-endpoint-exporter</artifactId>
-	<version>1.0.0</version>
+	<version>0.1.0</version>
 
 	<properties>
 		<kotlin.code.style>official</kotlin.code.style>
