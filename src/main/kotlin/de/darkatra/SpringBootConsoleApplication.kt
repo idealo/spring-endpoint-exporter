@@ -17,7 +17,8 @@ fun main(args: Array<String>) {
 
 @SpringBootApplication
 class SpringBootConsoleApplication(
-	private val requestMappingProcessor: RequestMappingProcessor
+	private val requestMappingProcessor: RequestMappingProcessor,
+	private val exportService: ExportService
 ) : ApplicationRunner {
 
 	override fun run(args: ApplicationArguments) {
@@ -46,6 +47,6 @@ class SpringBootConsoleApplication(
 			requestMappingProcessor.process(it.annotationMetadata)
 		}
 
-		println(classToRequestMappings)
+		exportService.writeAsOpenAPIDefinitions(classToRequestMappings)
 	}
 }

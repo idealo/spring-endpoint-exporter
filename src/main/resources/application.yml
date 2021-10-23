@@ -1,3 +1,5 @@
 spring:
   main:
     web-application-type: none
+  jackson:
+    default-property-inclusion: non_empty
