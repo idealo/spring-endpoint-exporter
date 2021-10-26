@@ -1,6 +1,7 @@
-package de.darkatra
+package de.darkatra.export
 
 import com.fasterxml.jackson.databind.ObjectMapper
+import de.darkatra.RequestMapping
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem

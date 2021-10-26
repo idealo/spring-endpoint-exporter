@@ -1,5 +1,8 @@
 package de.darkatra
 
+import de.darkatra.classreading.CompositeTypeFilter
+import de.darkatra.classreading.JarClassScanner
+import de.darkatra.export.ExportService
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication

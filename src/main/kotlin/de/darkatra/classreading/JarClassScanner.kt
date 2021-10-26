@@ -1,4 +1,4 @@
-package de.darkatra
+package de.darkatra.classreading
 
 import org.springframework.core.io.DefaultResourceLoader
 import org.springframework.core.type.classreading.MetadataReader
