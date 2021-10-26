@@ -1,10 +1,13 @@
 package de.darkatra
 
+import de.darkatra.classreading.internal.CustomMethodMetadata
 import org.springframework.core.annotation.AnnotationAttributes
 import org.springframework.core.type.AnnotationMetadata
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMethod
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.util.pattern.PathPatternParser
 import org.springframework.web.bind.annotation.RequestMapping as RequestMappingAnnotation
 
@@ -34,7 +37,7 @@ class RequestMappingProcessor(
 			annotationMetadata.getAnnotationAttributes(RequestMappingAnnotation::class.qualifiedName!!, true)
 		) ?: return emptyList()
 
-		return getRequestMapping(classRequestMapping)
+		return getRequestMapping(classRequestMapping, null)
 	}
 
 	private fun getMethodLevelRequestMappings(annotationMetadata: AnnotationMetadata): List<RequestMapping> {
@@ -48,12 +51,14 @@ class RequestMappingProcessor(
 				methodMetadata.getAnnotationAttributes(RequestMappingAnnotation::class.qualifiedName!!, true)
 			)!!
 
-			getRequestMapping(methodRequestMapping)
+			getRequestMapping(methodRequestMapping, when (methodMetadata) {
+				is CustomMethodMetadata -> methodMetadata
+				else -> null
+			})
 		}
 	}
 
-	// TODO: parse @PathVariables and @RequestParameter annotations
-	private fun getRequestMapping(annotationAttributes: AnnotationAttributes): List<RequestMapping> {
+	private fun getRequestMapping(annotationAttributes: AnnotationAttributes, methodMetadata: CustomMethodMetadata?): List<RequestMapping> {
 
 		val urlPatterns = annotationAttributes.getStringArray("path")
 
@@ -63,7 +68,28 @@ class RequestMappingProcessor(
 		return urlPatterns.map { urlPattern ->
 			RequestMapping(
 				urlPattern = patternParser.parse(urlPattern),
-				httpMethods = httpMethods.mapNotNull { HttpMethod.resolve(it.name) }.toSet()
+				httpMethods = httpMethods.mapNotNull { HttpMethod.resolve(it.name) }.toSet(),
+				requestParameters = methodMetadata?.getParameters()
+					?.filter { it.isAnnotated(RequestParam::class.qualifiedName!!) }
+					?.map {
+						val parameterAnnotationAttributes = AnnotationAttributes.fromMap(it.getAnnotationAttributes(RequestParam::class.qualifiedName!!))!!
+						RequestMapping.RequestParameter(
+							name = it.name,
+							type = it.type,
+							required = parameterAnnotationAttributes.getBoolean("required"),
+							defaultValue = parameterAnnotationAttributes.getString("defaultValue")
+						)
+					}
+					?: emptyList(),
+				pathVariables = methodMetadata?.getParameters()
+					?.filter { it.isAnnotated(PathVariable::class.qualifiedName!!) }
+					?.map {
+						RequestMapping.PathVariable(
+							name = it.name,
+							type = it.type
+						)
+					}
+					?: emptyList()
 			)
 		}
 	}

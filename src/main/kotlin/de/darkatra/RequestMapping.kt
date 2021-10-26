@@ -2,7 +2,6 @@ package de.darkatra
 
 import org.springframework.http.HttpMethod
 import org.springframework.web.util.pattern.PathPattern
-import java.lang.reflect.Type
 
 data class RequestMapping(
 	val urlPattern: PathPattern,
@@ -35,13 +34,13 @@ data class RequestMapping(
 
 	data class RequestParameter(
 		val name: String,
-		val type: Type,
-		val optional: Boolean = false,
+		val type: String,
+		val required: Boolean = true,
 		val defaultValue: String? = null
 	)
 
 	data class PathVariable(
 		val name: String,
-		val type: Type
+		val type: String
 	)
 }

@@ -7,6 +7,7 @@ import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
 import io.swagger.v3.oas.models.Paths
 import io.swagger.v3.oas.models.info.Info
+import io.swagger.v3.oas.models.parameters.Parameter
 import org.springframework.stereotype.Service
 import java.nio.file.Path
 import kotlin.io.path.bufferedWriter
@@ -23,12 +24,29 @@ class ExportService(
 
 		val paths = Paths()
 		classToRequestMappings.values.flatten().forEach { requestMapping ->
+
+			val operation = Operation().summary("summary")
+
+			// TODO: map type
+			requestMapping.requestParameters.forEach { requestParameter ->
+				operation.addParametersItem(Parameter()
+					.name(requestParameter.name)
+					.required(requestParameter.required)
+					.`in`("query")
+				)
+			}
+
+			// TODO: map type
+			requestMapping.pathVariables.forEach { pathVariable ->
+				operation.addParametersItem(Parameter()
+					.name(pathVariable.name)
+					.`in`("path")
+				)
+			}
+
 			paths.addPathItem(
 				requestMapping.urlPattern.patternString,
-				PathItem().get(
-					Operation()
-						.summary("summary")
-				)
+				PathItem().get(operation)
 			)
 		}
 

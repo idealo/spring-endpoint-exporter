@@ -1,8 +1,8 @@
 package de.darkatra.classreading
 
+import de.darkatra.classreading.internal.CustomMetadataReaderFactory
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.springframework.core.type.classreading.CachingMetadataReaderFactory
 import org.springframework.core.type.classreading.MetadataReader
 import org.springframework.core.type.filter.TypeFilter
 import java.nio.file.Path
@@ -14,7 +14,7 @@ abstract class ClassScanner(
 ) {
 
 	protected val resourcePatternResolver = PathMatchingResourcePatternResolver(resourceLoader)
-	protected val metadataReaderFactory = CachingMetadataReaderFactory(resourceLoader)
+	protected val metadataReaderFactory = CustomMetadataReaderFactory(resourceLoader)
 
 	abstract fun scan(entrypoint: Path): List<MetadataReader>
 
