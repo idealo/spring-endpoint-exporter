@@ -1,7 +1,7 @@
 package de.darkatra
 
-import de.darkatra.classreading.internal.CustomMethodMetadata
-import de.darkatra.classreading.internal.ParameterMetadata
+import de.darkatra.classreading.ParameterAwareMethodMetadata
+import de.darkatra.classreading.ParameterMetadata
 import org.springframework.core.annotation.AnnotationAttributes
 import org.springframework.core.type.AnnotationMetadata
 import org.springframework.http.HttpMethod
@@ -56,13 +56,13 @@ class RequestMappingProcessor(
 			)!!
 
 			getRequestMapping(methodRequestMapping, when (methodMetadata) {
-				is CustomMethodMetadata -> methodMetadata
+				is ParameterAwareMethodMetadata -> methodMetadata
 				else -> null
 			})
 		}
 	}
 
-	private fun getRequestMapping(annotationAttributes: AnnotationAttributes, methodMetadata: CustomMethodMetadata?): List<RequestMapping> {
+	private fun getRequestMapping(annotationAttributes: AnnotationAttributes, methodMetadata: ParameterAwareMethodMetadata?): List<RequestMapping> {
 
 		val urlPatterns = annotationAttributes.getStringArray("path")
 

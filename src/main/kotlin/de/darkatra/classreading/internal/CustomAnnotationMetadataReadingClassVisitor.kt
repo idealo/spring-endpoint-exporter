@@ -66,7 +66,7 @@ class CustomAnnotationMetadataReadingClassVisitor : ClassVisitor(SpringAsmInfo.A
 	override fun visitMethod(access: Int, name: String, descriptor: String, signature: String?, exceptions: Array<String>?): MethodVisitor? {
 		return when {
 			isBridge(access) -> null
-			else -> CustomMethodMetadataReadingVisitor(
+			else -> ParameterAwareMethodMetadataReadingVisitor(
 				className, access, name, descriptor
 			) { e: MethodMetadata -> annotatedMethods.add(e) }
 		}

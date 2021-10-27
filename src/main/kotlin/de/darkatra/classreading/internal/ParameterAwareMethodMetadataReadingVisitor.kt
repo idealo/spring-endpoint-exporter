@@ -1,5 +1,7 @@
 package de.darkatra.classreading.internal
 
+import de.darkatra.classreading.ParameterAwareMethodMetadata
+import de.darkatra.classreading.ParameterMetadata
 import org.springframework.asm.AnnotationVisitor
 import org.springframework.asm.MethodVisitor
 import org.springframework.asm.SpringAsmInfo
@@ -10,10 +12,10 @@ import org.springframework.core.type.MethodMetadata
 import java.util.function.Consumer
 
 /**
- * ASM method visitor that creates [CustomMethodMetadata].
+ * ASM method visitor that creates [ParameterAwareMethodMetadata].
  * Heavily inspired by [SimpleMethodMetadataReadingVisitor][org.springframework.core.type.classreading.SimpleMethodMetadataReadingVisitor].
  */
-class CustomMethodMetadataReadingVisitor(
+class ParameterAwareMethodMetadataReadingVisitor(
 	private val declaringClassName: String,
 	private val access: Int,
 	private val methodName: String,
@@ -59,7 +61,8 @@ class CustomMethodMetadataReadingVisitor(
 		if (annotations.isNotEmpty()) {
 			val returnTypeName = Type.getReturnType(descriptor).className
 			val annotations = MergedAnnotations.of(annotations)
-			val metadata = CustomMethodMetadata(methodName, access, declaringClassName, returnTypeName, getSource(), annotations, parameters.map { it.build() })
+			val metadata =
+				ParameterAwareMethodMetadata(methodName, access, declaringClassName, returnTypeName, getSource(), annotations, parameters.map { it.build() })
 			consumer.accept(metadata)
 		}
 	}

@@ -1,4 +1,4 @@
-package de.darkatra.classreading.internal
+package de.darkatra.classreading
 
 import org.springframework.core.annotation.MergedAnnotation
 import org.springframework.core.annotation.MergedAnnotations

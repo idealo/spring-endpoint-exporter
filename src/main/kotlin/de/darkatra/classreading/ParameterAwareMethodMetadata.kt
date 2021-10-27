@@ -1,19 +1,20 @@
-package de.darkatra.classreading.internal
+package de.darkatra.classreading
 
+import de.darkatra.classreading.internal.ParameterAwareMethodMetadataReadingVisitor
 import org.springframework.asm.Opcodes
 import org.springframework.core.annotation.MergedAnnotations
 import org.springframework.core.type.MethodMetadata
 
 /**
- * [MethodMetadata] created from a [CustomMethodMetadataReadingVisitor].
+ * [MethodMetadata] created from a [ParameterAwareMethodMetadataReadingVisitor].
  * Heavily inspired by [SimpleMethodMetadata][org.springframework.core.type.classreading.SimpleMethodMetadata].
  */
-class CustomMethodMetadata(
+class ParameterAwareMethodMetadata(
 	private val methodName: String,
 	private val access: Int,
 	private val declaringClassName: String,
 	private val returnTypeName: String,
-	private val source: CustomMethodMetadataReadingVisitor.Source,
+	private val source: ParameterAwareMethodMetadataReadingVisitor.Source,
 	private val annotations: MergedAnnotations,
 	private val parameters: List<ParameterMetadata>
 ) : MethodMetadata {
@@ -39,7 +40,7 @@ class CustomMethodMetadata(
 
 	override fun getAnnotations(): MergedAnnotations = annotations
 
-	override fun equals(other: Any?): Boolean = this === other || other is CustomMethodMetadata && source == other.source
+	override fun equals(other: Any?): Boolean = this === other || other is ParameterAwareMethodMetadata && source == other.source
 
 	override fun hashCode(): Int = source.hashCode()
 
