@@ -6,10 +6,12 @@ import org.springframework.web.util.pattern.PathPattern
 
 data class RequestMapping(
 	val urlPattern: PathPattern,
-	val httpMethods: Set<HttpMethod> = emptySet(),
+	val httpMethods: Set<HttpMethod>,
 	val responseStatus: HttpStatus? = null,
-	val requestParameters: List<RequestParameter> = emptyList(),
-	val pathVariables: List<PathVariable> = emptyList(),
+	val requestParameters: List<RequestParameter>,
+	val pathVariables: List<PathVariable>,
+	val consumes: List<String>,
+	val produces: List<String>,
 	val declaringClassName: String? = null,
 	val methodName: String? = null
 ) {
@@ -21,6 +23,8 @@ data class RequestMapping(
 			responseStatus = other.responseStatus,
 			requestParameters = other.requestParameters,
 			pathVariables = other.pathVariables,
+			consumes = other.consumes,
+			produces = other.produces,
 			declaringClassName = other.declaringClassName,
 			methodName = other.methodName
 		)
@@ -37,6 +41,8 @@ data class RequestMapping(
 			responseStatus = this.responseStatus,
 			requestParameters = this.requestParameters,
 			pathVariables = this.pathVariables,
+			consumes = this.consumes,
+			produces = this.produces,
 			declaringClassName = this.declaringClassName,
 			methodName = this.methodName
 		)

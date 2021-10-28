@@ -66,6 +66,8 @@ class ExportService {
 			}
 
 			operation.extensions(mapOf(
+				"x-consumes" to requestMapping.consumes.joinToString(", "),
+				"x-produces" to requestMapping.produces.joinToString(", "),
 				"x-declaring-class-name" to requestMapping.declaringClassName,
 				"x-method-name" to requestMapping.methodName
 			))

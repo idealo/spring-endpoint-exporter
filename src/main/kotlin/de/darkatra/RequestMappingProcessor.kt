@@ -6,6 +6,7 @@ import org.springframework.core.annotation.AnnotationAttributes
 import org.springframework.core.type.AnnotationMetadata
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMethod
@@ -69,6 +70,9 @@ class RequestMappingProcessor(
 		@Suppress("UNCHECKED_CAST")
 		val httpMethods = annotationAttributes["method"] as Array<RequestMethod>? ?: emptyArray()
 
+		val consumes = annotationAttributes.getStringArray("consumes")
+		val produces = annotationAttributes.getStringArray("produces")
+
 		return urlPatterns.map { urlPattern ->
 			RequestMapping(
 				urlPattern = patternParser.parse(urlPattern),
@@ -106,6 +110,14 @@ class RequestMappingProcessor(
 						)
 					}
 					?: emptyList(),
+				consumes = when {
+					consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
+					else -> consumes.asList()
+				},
+				produces = when {
+					produces.isEmpty() -> listOf(MediaType.ALL_VALUE)
+					else -> produces.asList()
+				},
 				declaringClassName = methodMetadata?.declaringClassName,
 				methodName = methodMetadata?.methodName
 			)
