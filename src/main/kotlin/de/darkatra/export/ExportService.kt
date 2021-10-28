@@ -17,6 +17,7 @@ import io.swagger.v3.oas.models.media.StringSchema
 import io.swagger.v3.oas.models.parameters.Parameter
 import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
+import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
 import java.nio.file.Path
 import kotlin.io.path.bufferedWriter
@@ -69,10 +70,12 @@ class ExportService {
 				"x-method-name" to requestMapping.methodName
 			))
 
-			paths.addPathItem(
-				requestMapping.urlPattern.patternString,
-				PathItem().get(operation)
-			)
+			requestMapping.httpMethods.forEach { httpMethod ->
+				paths.addPathItem(
+					requestMapping.urlPattern.patternString,
+					mapHttpMethodToOperation(httpMethod).invoke(PathItem(), operation)
+				)
+			}
 		}
 
 		outFile.bufferedWriter().use { writer ->
@@ -106,6 +109,19 @@ class ExportService {
 			"java.lang.Boolean" -> BooleanSchema()
 			"java.util.List" -> ArraySchema()
 			else -> ObjectSchema()
+		}
+	}
+
+	private fun mapHttpMethodToOperation(httpMethod: HttpMethod): (PathItem, Operation) -> PathItem {
+		return when (httpMethod) {
+			HttpMethod.GET -> PathItem::get
+			HttpMethod.POST -> PathItem::post
+			HttpMethod.PUT -> PathItem::put
+			HttpMethod.PATCH -> PathItem::patch
+			HttpMethod.DELETE -> PathItem::delete
+			HttpMethod.HEAD -> PathItem::head
+			HttpMethod.TRACE -> PathItem::trace
+			HttpMethod.OPTIONS -> PathItem::options
 		}
 	}
 }
