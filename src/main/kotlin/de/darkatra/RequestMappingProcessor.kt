@@ -80,48 +80,63 @@ class RequestMappingProcessor(
 				responseStatus = methodMetadata?.getAnnotationAttributes(ResponseStatus::class.qualifiedName!!)?.let {
 					it["code"] as HttpStatus
 				} ?: HttpStatus.OK,
-				requestParameters = methodMetadata?.getParameters()
-					?.filter { it.isAnnotated(RequestParam::class.qualifiedName!!) }
-					?.map { parameterMetadata ->
-						val parameterAnnotationAttributes =
-							AnnotationAttributes.fromMap(parameterMetadata.getAnnotationAttributes(RequestParam::class.qualifiedName!!))!!
-						val defaultValue = parameterAnnotationAttributes.getString("defaultValue")
-
-						RequestMapping.RequestParameter(
-							name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
-							type = parameterMetadata.type,
-							required = parameterAnnotationAttributes.getBoolean("required") || ValueConstants.DEFAULT_NONE == defaultValue,
-							defaultValue = when (defaultValue) {
-								ValueConstants.DEFAULT_NONE -> null
-								else -> defaultValue
-							}
-						)
-					}
-					?: emptyList(),
-				pathVariables = methodMetadata?.getParameters()
-					?.filter { it.isAnnotated(PathVariable::class.qualifiedName!!) }
-					?.map { parameterMetadata ->
-						val parameterAnnotationAttributes =
-							AnnotationAttributes.fromMap(parameterMetadata.getAnnotationAttributes(PathVariable::class.qualifiedName!!))!!
-						RequestMapping.PathVariable(
-							name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
-							type = parameterMetadata.type,
-							required = parameterAnnotationAttributes.getBoolean("required")
-						)
-					}
-					?: emptyList(),
-				consumes = when {
-					consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
-					else -> consumes.asList()
-				},
-				produces = when {
-					produces.isEmpty() -> listOf(MediaType.ALL_VALUE)
-					else -> produces.asList()
-				},
+				requestParameters = getRequestParameters(methodMetadata),
+				pathVariables = getPathVariables(methodMetadata),
+				consumes = getMediaTypes(consumes),
+				produces = getMediaTypes(produces),
 				declaringClassName = methodMetadata?.declaringClassName,
 				methodName = methodMetadata?.methodName
 			)
 		}
+	}
+
+	private fun getRequestParameters(methodMetadata: ParameterAwareMethodMetadata?): List<RequestMapping.RequestParameter> {
+
+		if (methodMetadata == null) {
+			return emptyList()
+		}
+
+		return methodMetadata.getParameters()
+			.filter { it.isAnnotated(RequestParam::class.qualifiedName!!) }
+			.map { parameterMetadata ->
+				val parameterAnnotationAttributes =
+					AnnotationAttributes.fromMap(parameterMetadata.getAnnotationAttributes(RequestParam::class.qualifiedName!!))!!
+				val defaultValue = parameterAnnotationAttributes.getString("defaultValue")
+
+				RequestMapping.RequestParameter(
+					name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
+					type = parameterMetadata.type,
+					required = parameterAnnotationAttributes.getBoolean("required") || ValueConstants.DEFAULT_NONE == defaultValue,
+					defaultValue = when (defaultValue) {
+						ValueConstants.DEFAULT_NONE -> null
+						else -> defaultValue
+					}
+				)
+			}
+	}
+
+	private fun getPathVariables(methodMetadata: ParameterAwareMethodMetadata?): List<RequestMapping.PathVariable> {
+
+		if (methodMetadata == null) {
+			return emptyList()
+		}
+
+		return methodMetadata.getParameters()
+			.filter { it.isAnnotated(PathVariable::class.qualifiedName!!) }
+			.map { parameterMetadata ->
+				val parameterAnnotationAttributes =
+					AnnotationAttributes.fromMap(parameterMetadata.getAnnotationAttributes(PathVariable::class.qualifiedName!!))!!
+				RequestMapping.PathVariable(
+					name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
+					type = parameterMetadata.type,
+					required = parameterAnnotationAttributes.getBoolean("required")
+				)
+			}
+	}
+
+	private fun getMediaTypes(consumes: Array<String>) = when {
+		consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
+		else -> consumes.asList()
 	}
 
 	private fun getParameterName(parameterMetadata: ParameterMetadata, parameterAnnotationAttributes: AnnotationAttributes): String {

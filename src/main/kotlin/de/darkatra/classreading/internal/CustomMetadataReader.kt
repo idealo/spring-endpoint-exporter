@@ -34,7 +34,10 @@ class CustomMetadataReader(
 			return try {
 				ClassReader(it)
 			} catch (e: IllegalArgumentException) {
-				throw NestedIOException("ASM ClassReader failed to parse class file - probably due to a new Java class file version that isn't supported yet: $resource", e)
+				throw NestedIOException(
+					"ASM ClassReader failed to parse class file - probably due to a new Java class file version that isn't supported yet: $resource",
+					e
+				)
 			}
 		}
 	}

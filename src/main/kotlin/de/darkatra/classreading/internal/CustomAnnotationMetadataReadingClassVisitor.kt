@@ -12,21 +12,24 @@ import org.springframework.core.type.MethodMetadata
 import org.springframework.util.Assert
 import org.springframework.util.ClassUtils
 import org.springframework.util.StringUtils
-import java.util.function.Consumer
 
+/**
+ * ASM class visitor that creates [SimpleAnnotationMetadata][org.springframework.core.type.classreading.SimpleAnnotationMetadata].
+ * Heavily inspired by [SimpleAnnotationMetadataReadingVisitor][org.springframework.core.type.classreading.SimpleAnnotationMetadataReadingVisitor].
+ */
 class CustomAnnotationMetadataReadingClassVisitor : ClassVisitor(SpringAsmInfo.ASM_VERSION) {
 
 	private var className = ""
 	private var access = 0
 	private var superClassName: String? = null
-	private var interfaceNames = arrayOfNulls<String>(0)
+	private var interfaceNames = arrayOf<String>()
 	private var enclosingClassName: String? = null
 	private var independentInnerClass = false
 	private val memberClassNames: MutableSet<String> = LinkedHashSet(4)
 	private val annotations: MutableList<MergedAnnotation<*>> = ArrayList()
 	private val annotatedMethods: MutableList<MethodMetadata> = ArrayList()
 	private var metadata: AnnotationMetadata? = null
-	private var source: Source? = null
+	private val source: Source by lazy { Source(className) }
 
 	override fun visit(version: Int, access: Int, name: String, signature: String?, supername: String?, interfaces: Array<String>?) {
 		className = toClassName(name)
@@ -55,12 +58,9 @@ class CustomAnnotationMetadataReadingClassVisitor : ClassVisitor(SpringAsmInfo.A
 	}
 
 	override fun visitAnnotation(descriptor: String, visible: Boolean): AnnotationVisitor? {
-		val clazz = Class.forName("org.springframework.core.type.classreading.MergedAnnotationReadingVisitor")
-		return clazz
-			.getDeclaredMethod("get", ClassLoader::class.java, Any::class.java, String::class.java, Boolean::class.java, Consumer::class.java)
-			.also { it.trySetAccessible() }
-			.invoke(clazz, null, getSource(), descriptor, visible, Consumer { e: MergedAnnotation<Annotation> -> annotations.add(e) })
-			as AnnotationVisitor?
+		return MergedAnnotationReadingVisitorFactory.get(
+			source, descriptor, visible
+		) { e: MergedAnnotation<Annotation> -> annotations.add(e) }
 	}
 
 	override fun visitMethod(access: Int, name: String, descriptor: String, signature: String?, exceptions: Array<String>?): MethodVisitor? {
@@ -77,23 +77,22 @@ class CustomAnnotationMetadataReadingClassVisitor : ClassVisitor(SpringAsmInfo.A
 		val annotatedMethods = annotatedMethods.toTypedArray()
 		val annotations = MergedAnnotations.of(annotations)
 
-		metadata = Class.forName("org.springframework.core.type.classreading.SimpleAnnotationMetadata")
-			.declaredConstructors.first()
-			.also { it.trySetAccessible() }
-			.newInstance(className, access, enclosingClassName, superClassName, independentInnerClass, interfaceNames, memberClassNames, annotatedMethods, annotations)
-			as AnnotationMetadata
+		metadata = SimpleAnnotationMetadataFactory.get(
+			className,
+			access,
+			enclosingClassName,
+			superClassName,
+			independentInnerClass,
+			interfaceNames,
+			memberClassNames,
+			annotatedMethods,
+			annotations
+		)
 	}
 
 	fun getMetadata(): AnnotationMetadata {
 		Assert.state(metadata != null, "AnnotationMetadata not initialized")
 		return metadata!!
-	}
-
-	private fun getSource(): Source {
-		if (source == null) {
-			source = Source(className)
-		}
-		return source!!
 	}
 
 	private fun toClassName(name: String): String {
@@ -108,18 +107,7 @@ class CustomAnnotationMetadataReadingClassVisitor : ClassVisitor(SpringAsmInfo.A
 		return access and Opcodes.ACC_INTERFACE != 0
 	}
 
-	private class Source(private val className: String) {
-
-		override fun equals(other: Any?): Boolean {
-			return when {
-				this === other -> true
-				other == null || javaClass != other.javaClass -> false
-				else -> className == (other as Source).className
-			}
-		}
-
-		override fun hashCode(): Int = className.hashCode()
-
+	private data class Source(private val className: String) {
 		override fun toString(): String = className
 	}
 }

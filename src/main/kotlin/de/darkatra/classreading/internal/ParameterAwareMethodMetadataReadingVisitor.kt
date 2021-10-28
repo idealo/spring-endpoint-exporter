@@ -26,20 +26,16 @@ class ParameterAwareMethodMetadataReadingVisitor(
 	private val annotations: MutableList<MergedAnnotation<*>> = ArrayList(4)
 	private var currentParameter = 0
 	private val parameters: MutableList<ParameterMetadata.Builder> = ArrayList(4)
-	private var source: Source? = null
+	private val source: Source by lazy { Source(declaringClassName, methodName, descriptor) }
 
 	override fun visitAnnotation(descriptor: String, visible: Boolean): AnnotationVisitor? {
-		val clazz = Class.forName("org.springframework.core.type.classreading.MergedAnnotationReadingVisitor")
-		return clazz
-			.getDeclaredMethod("get", ClassLoader::class.java, Any::class.java, String::class.java, Boolean::class.java, Consumer::class.java)
-			.also { it.trySetAccessible() }
-			.invoke(clazz, null, getSource(), descriptor, visible, Consumer { e: MergedAnnotation<Annotation> -> annotations.add(e) })
-			as AnnotationVisitor?
+		return MergedAnnotationReadingVisitorFactory.get(
+			source, descriptor, visible
+		) { e: MergedAnnotation<Annotation> -> annotations.add(e) }
 	}
 
 	override fun visitParameter(name: String?, access: Int) {
 		super.visitParameter(name, access)
-
 		parameters.add(ParameterMetadata.Builder(
 			name = name ?: "arg$currentParameter",
 			access = access,
@@ -48,58 +44,29 @@ class ParameterAwareMethodMetadataReadingVisitor(
 		currentParameter++
 	}
 
-	override fun visitParameterAnnotation(parameter: Int, descriptor: String?, visible: Boolean): AnnotationVisitor? {
-		val clazz = Class.forName("org.springframework.core.type.classreading.MergedAnnotationReadingVisitor")
-		return clazz
-			.getDeclaredMethod("get", ClassLoader::class.java, Any::class.java, String::class.java, Boolean::class.java, Consumer::class.java)
-			.also { it.trySetAccessible() }
-			.invoke(clazz, null, getSource(), descriptor, visible, Consumer { e: MergedAnnotation<Annotation> -> parameters[parameter].addAnnotation(e) })
-			as AnnotationVisitor?
+	override fun visitParameterAnnotation(parameter: Int, descriptor: String, visible: Boolean): AnnotationVisitor? {
+		return MergedAnnotationReadingVisitorFactory.get(
+			source, descriptor, visible
+		) { e: MergedAnnotation<Annotation> -> parameters[parameter].addAnnotation(e) }
 	}
 
 	override fun visitEnd() {
 		if (annotations.isNotEmpty()) {
 			val returnTypeName = Type.getReturnType(descriptor).className
 			val annotations = MergedAnnotations.of(annotations)
-			val metadata =
-				ParameterAwareMethodMetadata(methodName, access, declaringClassName, returnTypeName, getSource(), annotations, parameters.map { it.build() })
+			val parameters = parameters.map { it.build() }
+			val metadata = ParameterAwareMethodMetadata(methodName, access, declaringClassName, returnTypeName, source, annotations, parameters)
 			consumer.accept(metadata)
 		}
 	}
 
-	private fun getSource(): Source {
-		if (source == null) {
-			source = Source(declaringClassName, methodName, descriptor)
-		}
-		return source!!
-	}
-
-	class Source(
+	data class Source(
 		private val declaringClassName: String,
 		private val methodName: String,
 		private val descriptor: String
 	) {
 
 		private var toStringValue: String? = null
-
-		override fun hashCode(): Int {
-			var result = 1
-			result = 31 * result + declaringClassName.hashCode()
-			result = 31 * result + methodName.hashCode()
-			result = 31 * result + descriptor.hashCode()
-			return result
-		}
-
-		override fun equals(other: Any?): Boolean {
-			if (this === other) {
-				return true
-			}
-			if (other == null || javaClass != other.javaClass) {
-				return false
-			}
-			val otherSource = other as Source
-			return declaringClassName == otherSource.declaringClassName && methodName == otherSource.methodName && descriptor == otherSource.descriptor
-		}
 
 		override fun toString(): String {
 			if (toStringValue == null) {
