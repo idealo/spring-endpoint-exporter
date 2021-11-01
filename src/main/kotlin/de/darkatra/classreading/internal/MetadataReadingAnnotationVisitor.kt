@@ -46,6 +46,10 @@ internal class MetadataReadingAnnotationVisitor private constructor(
         return MetadataReadingAnnotationArrayVisitor { attributes[name] = it }
     }
 
+    override fun visitEnum(name: String, descriptor: String, value: String) {
+        attributes[name] = value
+    }
+
     override fun visitEnd() {
         callback(AnnotationMetadata(
             name = name,

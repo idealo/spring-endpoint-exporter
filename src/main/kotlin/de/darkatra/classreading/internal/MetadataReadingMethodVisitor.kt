@@ -7,7 +7,7 @@ import de.darkatra.classreading.type.Visibility
 import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.MethodVisitor
 import org.objectweb.asm.Opcodes
-import org.springframework.asm.Type
+import org.objectweb.asm.Type
 
 internal class MetadataReadingMethodVisitor(
     private val access: Int,
