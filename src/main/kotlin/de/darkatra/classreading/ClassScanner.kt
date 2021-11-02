@@ -1,36 +1,34 @@
 package de.darkatra.classreading
 
-import de.darkatra.classreading.internal.CustomMetadataReaderFactory
+import de.darkatra.classreading.type.ClassMetadata
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
-import org.springframework.core.type.classreading.MetadataReader
-import org.springframework.core.type.filter.TypeFilter
 import java.nio.file.Path
+import java.util.regex.Pattern
 
 abstract class ClassScanner(
-	private val includeFilters: List<TypeFilter>,
-	private val excludeFilters: List<TypeFilter>,
-	resourceLoader: ResourceLoader
+    private val includeFilters: List<Pattern>,
+    private val excludeFilters: List<Pattern>,
+    resourceLoader: ResourceLoader
 ) {
 
-	protected val resourcePatternResolver = PathMatchingResourcePatternResolver(resourceLoader)
-	protected val metadataReaderFactory = CustomMetadataReaderFactory(resourceLoader)
+    protected val resourcePatternResolver = PathMatchingResourcePatternResolver(resourceLoader)
 
-	abstract fun scan(entrypoint: Path): List<MetadataReader>
+    abstract fun scan(entrypoint: Path): List<ClassMetadata>
 
-	protected fun isCandidate(metadataReader: MetadataReader): Boolean {
+    protected fun isCandidate(classMetadata: ClassMetadata): Boolean {
 
-		// filter out all classes that match any exclude filters
-		if (this.excludeFilters.any { it.match(metadataReader, metadataReaderFactory) }) {
-			return false
-		}
+        // filter out all classes that match any exclude filters
+        if (this.excludeFilters.any { it.matcher(classMetadata.name).matches() }) {
+            return false
+        }
 
-		// only include classes that match any include filter
-		if (this.includeFilters.any { it.match(metadataReader, metadataReaderFactory) }) {
-			return true
-		}
+        // only include classes that match any include filter
+        if (this.includeFilters.any { it.matcher(classMetadata.name).matches() }) {
+            return true
+        }
 
-		// if no filter matches, exclude per default
-		return false
-	}
+        // if no filter matches, exclude per default
+        return false
+    }
 }
