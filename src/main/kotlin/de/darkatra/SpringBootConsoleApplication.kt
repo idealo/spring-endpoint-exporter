@@ -3,6 +3,7 @@ package de.darkatra
 import de.darkatra.classreading.JarClassScanner
 import de.darkatra.classreading.type.ClassMetadata
 import de.darkatra.export.ExportService
+import de.darkatra.processing.RequestMappingProcessor
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -22,16 +23,19 @@ class SpringBootConsoleApplication(
 
     override fun run(args: ApplicationArguments) {
 
-        // eg. "./target/spring-security-demo-1.0.0.jar"
         val jarPath = (args.getOptionValues("jarPath") ?: emptyList()).firstOrNull()
             ?: throw IllegalArgumentException("Required parameter 'jarPath' is not set.")
-        // eg. "de.darkatra.*"
-        val basePackage = (args.getOptionValues("basePackage") ?: emptyList()).firstOrNull()
-            ?: throw IllegalArgumentException("Required parameter 'basePackage' is not set.")
 
-        val scanner = JarClassScanner(includeFilters = listOf(
-            Pattern.compile(basePackage)
-        ))
+        val packagesToInclude = args.getOptionValues("include")
+            ?: throw IllegalArgumentException("Required parameter 'include' is not set.")
+
+        val packagesToExclude = args.getOptionValues("exclude")
+            ?: throw IllegalArgumentException("Required parameter 'exclude' is not set.")
+
+        val scanner = JarClassScanner(
+            includeFilters = packagesToInclude.map(Pattern::compile),
+            excludeFilters = packagesToExclude.map(Pattern::compile)
+        )
         val scanResult = scanner.scan(Path.of(jarPath))
 
         val classToRequestMappings = scanResult.associateBy(

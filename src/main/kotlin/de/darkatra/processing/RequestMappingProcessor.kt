@@ -1,10 +1,9 @@
-package de.darkatra
+package de.darkatra.processing
 
 import de.darkatra.classreading.type.AnnotatedTypeMetadata
 import de.darkatra.classreading.type.AnnotationMetadata
 import de.darkatra.classreading.type.ClassMetadata
 import de.darkatra.classreading.type.MethodMetadata
-import de.darkatra.classreading.type.ParameterMetadata
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -12,18 +11,18 @@ import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.util.pattern.PathPatternParser
 import org.springframework.web.bind.annotation.RequestMapping as RequestMappingAnnotation
 
 @Service
 class RequestMappingProcessor(
+    private val requestParamProcessor: RequestParamProcessor = RequestParamProcessor(),
+    private val pathVariableProcessor: PathVariableProcessor = PathVariableProcessor(),
     private val patternParser: PathPatternParser = PathPatternParser()
-) {
+) : MetadataProcessor<ClassMetadata, RequestMapping> {
 
     private val requestMappingAnnotations = listOf(
         RequestMappingAnnotation::class.qualifiedName!!,
@@ -34,10 +33,10 @@ class RequestMappingProcessor(
         DeleteMapping::class.qualifiedName!!
     )
 
-    fun process(classMetadata: ClassMetadata): List<RequestMapping> {
+    override fun process(metadata: ClassMetadata): List<RequestMapping> {
 
-        val classLevelRequestMappings = getClassLevelRequestMappings(classMetadata)
-        val methodLevelRequestMappings = getMethodLevelRequestMappings(classMetadata)
+        val classLevelRequestMappings = getClassLevelRequestMappings(metadata)
+        val methodLevelRequestMappings = getMethodLevelRequestMappings(metadata)
 
         return when {
             classLevelRequestMappings.isEmpty() -> methodLevelRequestMappings
@@ -83,63 +82,17 @@ class RequestMappingProcessor(
                     ?.getString("code")
                     ?.let { HttpStatus.valueOf(it) }
                     ?: HttpStatus.OK,
-                requestParameters = getRequestParameters(methodMetadata),
-                pathVariables = getPathVariables(methodMetadata),
+                requestParameters = methodMetadata?.let { requestParamProcessor.process(it) } ?: emptyList(),
+                pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
                 consumes = getMediaTypes(consumes),
                 produces = getMediaTypes(produces)
             )
         }
     }
 
-    private fun getRequestParameters(methodMetadata: MethodMetadata?): List<RequestMapping.RequestParameter> {
-
-        if (methodMetadata == null) {
-            return emptyList()
-        }
-
-        return methodMetadata.parameters
-            .filter { it.isAnnotated(RequestParam::class.qualifiedName!!) }
-            .map { parameterMetadata ->
-                val parameterAnnotationAttributes = parameterMetadata.getAnnotation(RequestParam::class.qualifiedName!!)!!
-                val defaultValue = parameterAnnotationAttributes.getString("defaultValue")
-
-                RequestMapping.RequestParameter(
-                    name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
-                    type = parameterMetadata.type,
-                    required = parameterAnnotationAttributes.getBoolean("required") ?: true || defaultValue == null,
-                    defaultValue = defaultValue
-                )
-            }
-    }
-
-    private fun getPathVariables(methodMetadata: MethodMetadata?): List<RequestMapping.PathVariable> {
-
-        if (methodMetadata == null) {
-            return emptyList()
-        }
-
-        return methodMetadata.parameters
-            .filter { it.isAnnotated(PathVariable::class.qualifiedName!!) }
-            .map { parameterMetadata ->
-                val parameterAnnotationAttributes = parameterMetadata.getAnnotation(PathVariable::class.qualifiedName!!)!!
-
-                RequestMapping.PathVariable(
-                    name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
-                    type = parameterMetadata.type,
-                    required = parameterAnnotationAttributes.getBoolean("required") ?: true
-                )
-            }
-    }
-
     private fun getMediaTypes(consumes: Array<String>) = when {
         consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
         else -> consumes.asList()
-    }
-
-    private fun getParameterName(parameterMetadata: ParameterMetadata, annotationMetadata: AnnotationMetadata): String {
-        return annotationMetadata.getString("name")
-            ?: annotationMetadata.getString("value")
-            ?: parameterMetadata.name
     }
 
     private fun getDefaultHttpMethodForRequestMappingAnnotation(annotationMetadata: AnnotationMetadata): String? {

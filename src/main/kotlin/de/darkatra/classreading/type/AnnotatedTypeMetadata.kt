@@ -1,6 +1,6 @@
 package de.darkatra.classreading.type
 
-interface AnnotatedTypeMetadata {
+interface AnnotatedTypeMetadata : Metadata {
 
     fun getAnnotations(): List<AnnotationMetadata>
 

@@ -1,4 +1,4 @@
-package de.darkatra
+package de.darkatra.processing
 
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus

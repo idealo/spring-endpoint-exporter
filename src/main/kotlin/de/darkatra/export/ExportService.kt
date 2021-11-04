@@ -1,6 +1,6 @@
 package de.darkatra.export
 
-import de.darkatra.RequestMapping
+import de.darkatra.processing.RequestMapping
 import io.swagger.v3.core.util.Json
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
