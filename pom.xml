@@ -11,7 +11,7 @@
         <relativePath/>
     </parent>
 
-    <groupId>de.darkatra</groupId>
+    <groupId>de.idealo.security</groupId>
     <artifactId>spring-endpoint-exporter</artifactId>
     <version>0.1.0</version>
 

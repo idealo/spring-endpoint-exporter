@@ -1,9 +1,9 @@
-package de.darkatra
+package de.idealo.security.endpointexporter
 
-import de.darkatra.classreading.JarClassScanner
-import de.darkatra.classreading.type.ClassMetadata
-import de.darkatra.export.ExportService
-import de.darkatra.processing.RequestMappingProcessor
+import de.idealo.security.endpointexporter.classreading.JarClassScanner
+import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.export.ExportService
+import de.idealo.security.endpointexporter.processing.RequestMappingProcessor
 import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication

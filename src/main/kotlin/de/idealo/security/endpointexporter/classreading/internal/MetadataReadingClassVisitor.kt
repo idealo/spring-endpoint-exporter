@@ -1,8 +1,8 @@
-package de.darkatra.classreading.internal
+package de.idealo.security.endpointexporter.classreading.internal
 
-import de.darkatra.classreading.type.AnnotationMetadata
-import de.darkatra.classreading.type.ClassMetadata
-import de.darkatra.classreading.type.MethodMetadata
+import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
+import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import org.objectweb.asm.AnnotationVisitor
 import org.objectweb.asm.ClassVisitor
 import org.objectweb.asm.MethodVisitor

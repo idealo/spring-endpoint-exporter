@@ -1,6 +1,6 @@
-package de.darkatra.classreading
+package de.idealo.security.endpointexporter.classreading
 
-import de.darkatra.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.springframework.core.io.ResourceLoader
 import org.springframework.core.io.support.PathMatchingResourcePatternResolver
 import java.nio.file.Path

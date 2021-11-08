@@ -1,7 +1,7 @@
-package de.darkatra.classreading
+package de.idealo.security.endpointexporter.classreading
 
-import de.darkatra.classreading.internal.MetadataReadingClassVisitor
-import de.darkatra.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.classreading.internal.MetadataReadingClassVisitor
+import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.objectweb.asm.ClassReader
 import org.springframework.core.io.Resource
 import java.io.IOException

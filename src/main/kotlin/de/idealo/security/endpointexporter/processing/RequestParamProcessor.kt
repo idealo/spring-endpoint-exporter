@@ -1,8 +1,8 @@
-package de.darkatra.processing
+package de.idealo.security.endpointexporter.processing
 
-import de.darkatra.classreading.type.AnnotationMetadata
-import de.darkatra.classreading.type.MethodMetadata
-import de.darkatra.classreading.type.ParameterMetadata
+import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
+import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
+import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
 import org.springframework.web.bind.annotation.RequestParam
 
 class RequestParamProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestParameter> {

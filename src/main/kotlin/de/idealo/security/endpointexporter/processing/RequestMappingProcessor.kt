@@ -1,9 +1,9 @@
-package de.darkatra.processing
+package de.idealo.security.endpointexporter.processing
 
-import de.darkatra.classreading.type.AnnotatedTypeMetadata
-import de.darkatra.classreading.type.AnnotationMetadata
-import de.darkatra.classreading.type.ClassMetadata
-import de.darkatra.classreading.type.MethodMetadata
+import de.idealo.security.endpointexporter.classreading.type.AnnotatedTypeMetadata
+import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
+import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType

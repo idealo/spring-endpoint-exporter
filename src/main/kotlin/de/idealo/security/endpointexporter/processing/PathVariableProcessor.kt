@@ -1,9 +1,9 @@
-package de.darkatra.processing
+package de.idealo.security.endpointexporter.processing
 
-import de.darkatra.classreading.type.AnnotationMetadata
-import de.darkatra.classreading.type.MethodMetadata
-import de.darkatra.classreading.type.ParameterMetadata
-import de.darkatra.processing.RequestMapping.PathVariable
+import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
+import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
+import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
+import de.idealo.security.endpointexporter.processing.RequestMapping.PathVariable
 import org.springframework.web.bind.annotation.PathVariable as PathVariableAnnotation
 
 class PathVariableProcessor : MetadataProcessor<MethodMetadata, PathVariable> {

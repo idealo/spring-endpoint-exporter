@@ -1,4 +1,4 @@
-package de.darkatra.processing
+package de.idealo.security.endpointexporter.processing
 
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus

@@ -1,4 +1,4 @@
-package de.darkatra.classreading.type
+package de.idealo.security.endpointexporter.classreading.type
 
 data class ParameterMetadata(
     val name: String,

@@ -1,6 +1,6 @@
-package de.darkatra.export
+package de.idealo.security.endpointexporter.export
 
-import de.darkatra.processing.RequestMapping
+import de.idealo.security.endpointexporter.processing.RequestMapping
 import io.swagger.v3.core.util.Json
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
