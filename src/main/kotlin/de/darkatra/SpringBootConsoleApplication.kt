@@ -29,8 +29,8 @@ class SpringBootConsoleApplication(
         val packagesToInclude = args.getOptionValues("include")
             ?: throw IllegalArgumentException("Required parameter 'include' is not set.")
 
-        val packagesToExclude = args.getOptionValues("exclude")
-            ?: throw IllegalArgumentException("Required parameter 'exclude' is not set.")
+        val packagesToExclude: List<String> = args.getOptionValues("exclude")
+            ?: emptyList()
 
         val scanner = JarClassScanner(
             includeFilters = packagesToInclude.map(Pattern::compile),
