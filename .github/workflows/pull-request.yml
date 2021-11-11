@@ -1,0 +1,51 @@
+name: Verify Pull Request
+on:
+  pull_request_target:
+    paths:
+      - 'src/**'
+      - 'pom.xml'
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2.3.4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+          fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
+
+      - name: Set up JDK 11
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+          distribution: 'adopt'
+
+      - name: Cache SonarCloud packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: ${{ runner.os }}-sonar
+
+      - name: Cache Maven packages
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2
+          key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-m2
+
+      - name: Run tests
+        run: mvn -B -ntp -Psonar-coverage verify
+
+      - name: Analyze with SonarCloud
+        run: |
+          mvn -B -ntp org.sonarsource.scanner.maven:sonar-maven-plugin:sonar \
+          -Dsonar.projectKey=spring-endpoint-exporter \
+          -Dsonar.pullrequest.branch='${{ github.event.pull_request.head.ref }}' \
+          -Dsonar.pullrequest.base='${{ github.event.pull_request.base.ref }}' \
+          -Dsonar.pullrequest.key='${{ github.event.pull_request.number }}'
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

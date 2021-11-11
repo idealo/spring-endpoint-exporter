@@ -34,7 +34,6 @@ internal class MetadataReadingMethodVisitor(
     override fun visitParameter(name: String?, access: Int) {
         parameters.add(ParameterMetadata.Builder(
             name = name ?: "arg$currentParameter",
-            access = access,
             type = Type.getArgumentTypes(descriptor)[currentParameter].className
         ))
         currentParameter++

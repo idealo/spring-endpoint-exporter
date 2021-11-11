@@ -1,3 +1,5 @@
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=spring-endpoint-exporter&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=spring-endpoint-exporter)
+
 # Spring Endpoint Exporter
 
 Spring Endpoint Exporter aims to increase the value of your dynamic security scans by exporting all endpoints from

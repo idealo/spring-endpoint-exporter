@@ -50,18 +50,18 @@ class RequestMappingProcessor(
 
     private fun getClassLevelRequestMappings(classMetadata: ClassMetadata): List<RequestMapping> {
         val classRequestMapping = getFirstRequestMappingAnnotation(classMetadata) ?: return emptyList()
-        return getRequestMapping(classRequestMapping, null)
+        return getRequestMapping(classMetadata, classRequestMapping, null)
     }
 
     private fun getMethodLevelRequestMappings(classMetadata: ClassMetadata): List<RequestMapping> {
         val methodsWithRequestMapping = requestMappingAnnotations.flatMap { classMetadata.getAnnotatedMethods(it) }
         return methodsWithRequestMapping.flatMap { methodMetadata ->
             val methodRequestMapping = getFirstRequestMappingAnnotation(methodMetadata)!!
-            getRequestMapping(methodRequestMapping, methodMetadata)
+            getRequestMapping(classMetadata, methodRequestMapping, methodMetadata)
         }
     }
 
-    private fun getRequestMapping(annotationMetadata: AnnotationMetadata, methodMetadata: MethodMetadata?): List<RequestMapping> {
+    private fun getRequestMapping(classMetadata: ClassMetadata, annotationMetadata: AnnotationMetadata, methodMetadata: MethodMetadata?): List<RequestMapping> {
 
         val urlPatterns = arrayOf(
             *annotationMetadata.getStringArray("path"),
@@ -85,7 +85,9 @@ class RequestMappingProcessor(
                 requestParameters = methodMetadata?.let { requestParamProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
                 consumes = getMediaTypes(consumes),
-                produces = getMediaTypes(produces)
+                produces = getMediaTypes(produces),
+                declaringClassName = classMetadata.name,
+                methodName = methodMetadata?.name
             )
         }
     }
