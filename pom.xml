@@ -15,12 +15,29 @@
     <artifactId>spring-endpoint-exporter</artifactId>
     <version>0.1.0</version>
 
+    <licenses>
+        <license>
+            <name>Apache-2.0</name>
+            <url>https://opensource.org/licenses/Apache-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <scm>
+        <connection>scm:git:git@github.com:idealo/spring-endpoint-exporter.git</connection>
+        <url>https://github.com/idealo/spring-endpoint-exporter</url>
+    </scm>
+
     <properties>
+        <sonar.host.url>https://sonarcloud.io</sonar.host.url>
+        <sonar.organization>idealo</sonar.organization>
+
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.version>1.5.31</kotlin.version>
 
         <asm.version>9.2</asm.version>
         <swagger.version>2.1.11</swagger.version>
+        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -107,11 +124,47 @@
         </plugins>
     </build>
 
-    <licenses>
-        <license>
-            <name>Apache-2.0</name>
-            <url>https://opensource.org/licenses/Apache-2.0</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <profiles>
+        <profile>
+            <id>sonar-coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>agent-for-ut</id>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>agent-for-it</id>
+                                <goals>
+                                    <goal>prepare-agent-integration</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report-ut</id>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>default-report-it</id>
+                                <goals>
+                                    <goal>report-integration</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <append>true</append>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
