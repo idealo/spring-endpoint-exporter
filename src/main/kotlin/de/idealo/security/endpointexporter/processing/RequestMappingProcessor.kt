@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestMapping as RequestMappingA
 
 @Service
 class RequestMappingProcessor(
-    private val requestParamProcessor: RequestParamProcessor = RequestParamProcessor(),
+    private val requestParameterProcessor: RequestParameterProcessor = RequestParameterProcessor(),
     private val pathVariableProcessor: PathVariableProcessor = PathVariableProcessor(),
     private val patternParser: PathPatternParser = PathPatternParser()
 ) : MetadataProcessor<ClassMetadata, RequestMapping> {
@@ -63,10 +63,7 @@ class RequestMappingProcessor(
 
     private fun getRequestMapping(classMetadata: ClassMetadata, annotationMetadata: AnnotationMetadata, methodMetadata: MethodMetadata?): List<RequestMapping> {
 
-        val urlPatterns = arrayOf(
-            *annotationMetadata.getStringArray("path"),
-            *annotationMetadata.getStringArray("value")
-        )
+        val urlPatterns = getUrlPatterns(annotationMetadata)
         val httpMethods = arrayOf(
             *annotationMetadata.getStringArray("method"),
             getDefaultHttpMethodForRequestMappingAnnotation(annotationMetadata)
@@ -78,11 +75,12 @@ class RequestMappingProcessor(
             RequestMapping(
                 urlPattern = patternParser.parse(urlPattern),
                 httpMethods = httpMethods.mapNotNull { HttpMethod.resolve(it) }.toSet(),
+                // TODO: support the value attribute for @ResponseStatus
                 responseStatus = methodMetadata?.getAnnotation(ResponseStatus::class.qualifiedName!!)
                     ?.getString("code")
                     ?.let { HttpStatus.valueOf(it) }
                     ?: HttpStatus.OK,
-                requestParameters = methodMetadata?.let { requestParamProcessor.process(it) } ?: emptyList(),
+                requestParameters = methodMetadata?.let { requestParameterProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
                 consumes = getMediaTypes(consumes),
                 produces = getMediaTypes(produces),
@@ -92,9 +90,17 @@ class RequestMappingProcessor(
         }
     }
 
-    private fun getMediaTypes(consumes: Array<String>) = when {
-        consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
-        else -> consumes.asList()
+    private fun getUrlPatterns(annotationMetadata: AnnotationMetadata): Array<String> {
+
+        val urlPatterns = arrayOf(
+            *annotationMetadata.getStringArray("path"),
+            *annotationMetadata.getStringArray("value")
+        )
+
+        return when (urlPatterns.isEmpty()) {
+            true -> arrayOf("/")
+            false -> urlPatterns
+        }
     }
 
     private fun getDefaultHttpMethodForRequestMappingAnnotation(annotationMetadata: AnnotationMetadata): String? {
@@ -106,6 +112,11 @@ class RequestMappingProcessor(
             DeleteMapping::class.qualifiedName!! -> HttpMethod.DELETE.name
             else -> null
         }
+    }
+
+    private fun getMediaTypes(consumes: Array<String>) = when {
+        consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
+        else -> consumes.asList()
     }
 
     private fun getFirstRequestMappingAnnotation(annotatedTypeMetadata: AnnotatedTypeMetadata): AnnotationMetadata? {
