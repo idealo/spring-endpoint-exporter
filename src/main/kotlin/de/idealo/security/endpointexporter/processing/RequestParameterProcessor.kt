@@ -5,7 +5,7 @@ import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
 import org.springframework.web.bind.annotation.RequestParam
 
-class RequestParamProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestParameter> {
+class RequestParameterProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestParameter> {
 
     override fun process(metadata: MethodMetadata): List<RequestMapping.RequestParameter> {
 

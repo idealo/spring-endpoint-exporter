@@ -7,7 +7,7 @@ import org.springframework.web.util.pattern.PathPattern
 data class RequestMapping(
     val urlPattern: PathPattern,
     val httpMethods: Set<HttpMethod>,
-    val responseStatus: HttpStatus? = null,
+    val responseStatus: HttpStatus,
     val requestParameters: List<RequestParameter>,
     val pathVariables: List<PathVariable>,
     val consumes: List<String>,
