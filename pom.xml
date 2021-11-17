@@ -107,7 +107,6 @@
                 <configuration>
                     <args>
                         <arg>-Xjsr305=strict</arg>
-                        <arg>-Xemit-jvm-type-annotations</arg>
                     </args>
                     <compilerPlugins>
                         <plugin>spring</plugin>
@@ -120,6 +119,10 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
