@@ -54,16 +54,14 @@ class ExportService {
             }
 
             val responseStatus = requestMapping.responseStatus
-            if (responseStatus != null) {
-                operation.responses(
-                    ApiResponses()
-                        .addApiResponse(
-                            responseStatus.value().toString(),
-                            ApiResponse()
-                                .description(responseStatus.reasonPhrase)
-                        )
-                )
-            }
+            operation.responses(
+                ApiResponses()
+                    .addApiResponse(
+                        responseStatus.value().toString(),
+                        ApiResponse()
+                            .description(responseStatus.reasonPhrase)
+                    )
+            )
 
             operation.extensions(mapOf(
                 "x-consumes" to requestMapping.consumes.joinToString(", "),
