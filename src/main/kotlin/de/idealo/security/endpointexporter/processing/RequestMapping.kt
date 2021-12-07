@@ -10,6 +10,7 @@ data class RequestMapping(
     val responseStatus: HttpStatus,
     val requestParameters: List<RequestParameter>,
     val pathVariables: List<PathVariable>,
+    val requestHeaders: List<RequestHeader>,
     val consumes: List<String>,
     val produces: List<String>,
     val declaringClassName: String? = null,
@@ -23,6 +24,7 @@ data class RequestMapping(
             responseStatus = other.responseStatus,
             requestParameters = other.requestParameters,
             pathVariables = other.pathVariables,
+            requestHeaders = this.requestHeaders,
             consumes = other.consumes,
             produces = other.produces,
             declaringClassName = other.declaringClassName,
@@ -41,6 +43,7 @@ data class RequestMapping(
             responseStatus = this.responseStatus,
             requestParameters = this.requestParameters,
             pathVariables = this.pathVariables,
+            requestHeaders = this.requestHeaders,
             consumes = this.consumes,
             produces = this.produces,
             declaringClassName = this.declaringClassName,
@@ -59,5 +62,11 @@ data class RequestMapping(
         val name: String,
         val type: String,
         val required: Boolean = true
+    )
+
+    data class RequestHeader(
+        val name: String,
+        val type: String,
+        val required: Boolean
     )
 }

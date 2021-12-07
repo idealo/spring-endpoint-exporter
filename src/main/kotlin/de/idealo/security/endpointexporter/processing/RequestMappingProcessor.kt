@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestMapping as RequestMappingA
 class RequestMappingProcessor(
     private val requestParameterProcessor: RequestParameterProcessor = RequestParameterProcessor(),
     private val pathVariableProcessor: PathVariableProcessor = PathVariableProcessor(),
+    private val requestHeaderProcessor: RequestHeaderProcessor,
     private val patternParser: PathPatternParser = PathPatternParser()
 ) : MetadataProcessor<ClassMetadata, RequestMapping> {
 
@@ -82,6 +83,7 @@ class RequestMappingProcessor(
                     ?: HttpStatus.OK,
                 requestParameters = methodMetadata?.let { requestParameterProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
+                requestHeaders = methodMetadata?.let { requestHeaderProcessor.process(it) } ?: emptyList(),
                 consumes = getMediaTypes(consumes),
                 produces = getMediaTypes(produces),
                 declaringClassName = classMetadata.name,

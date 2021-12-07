@@ -22,6 +22,7 @@ internal class RequestMappingTest {
             responseStatus = HttpStatus.OK,
             requestParameters = emptyList(),
             pathVariables = emptyList(),
+            requestHeaders = emptyList(),
             consumes = listOf(MediaType.ALL_VALUE),
             produces = listOf(MediaType.ALL_VALUE),
             declaringClassName = "TestClass",
@@ -47,6 +48,7 @@ internal class RequestMappingTest {
                     required = true
                 )
             ),
+            requestHeaders = emptyList(),
             consumes = listOf(MediaType.APPLICATION_JSON_VALUE),
             produces = listOf(MediaType.ALL_VALUE),
             declaringClassName = "TestClass",
@@ -82,6 +84,7 @@ internal class RequestMappingTest {
             responseStatus = HttpStatus.OK,
             requestParameters = emptyList(),
             pathVariables = emptyList(),
+            requestHeaders = emptyList(),
             consumes = listOf(MediaType.ALL_VALUE),
             produces = listOf(MediaType.ALL_VALUE),
             declaringClassName = "TestClass",
@@ -113,6 +116,7 @@ internal class RequestMappingTest {
             responseStatus = HttpStatus.OK,
             requestParameters = emptyList(),
             pathVariables = emptyList(),
+            requestHeaders = emptyList(),
             consumes = listOf(MediaType.ALL_VALUE),
             produces = listOf(MediaType.ALL_VALUE),
             declaringClassName = "TestClass",
