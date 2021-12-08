@@ -13,15 +13,16 @@ import org.springframework.web.bind.annotation.RequestHeader
 
 internal class RequestHeaderProcessorTest {
 
-    private val testedUnit = RequestHeaderProcessor()
+    private val requestHeaderProcessor = RequestHeaderProcessor()
 
     @Test
     internal fun `should extract RequestHeader with explicit header name by name attribute`() {
+
         val name = "header-name"
         val type = "java.lang.String"
         val methodMetadata = createTestMethod("name", type, name, null, null)
 
-        val requestParameters = testedUnit.process(methodMetadata)
+        val requestParameters = requestHeaderProcessor.process(methodMetadata)
 
         assertThat(requestParameters)
             .hasSize(1)
@@ -31,11 +32,12 @@ internal class RequestHeaderProcessorTest {
 
     @Test
     internal fun `should extract RequestHeader with implicit header name by parameter name`() {
+
         val paramName = "parameterName"
         val type = "java.lang.Long"
         val methodMetadata = createTestMethod(paramName, type, null, null, null)
 
-        val requestParameters = testedUnit.process(methodMetadata)
+        val requestParameters = requestHeaderProcessor.process(methodMetadata)
 
         assertThat(requestParameters)
             .hasSize(1)
@@ -49,10 +51,11 @@ internal class RequestHeaderProcessorTest {
     @ParameterizedTest
     @ValueSource(booleans = [true, false])
     internal fun `should extract RequestHeader with explicit required attribute`(required: Boolean) {
+
         val name = "header-name"
         val methodMetadata = createTestMethod("name", "java.lang.String", name, required, "default")
 
-        val requestParameters = testedUnit.process(methodMetadata)
+        val requestParameters = requestHeaderProcessor.process(methodMetadata)
 
         assertThat(requestParameters)
             .hasSize(1)
@@ -65,10 +68,11 @@ internal class RequestHeaderProcessorTest {
      */
     @Test
     internal fun `should extract RequestHeader with implicit required attribute set to false because of existing default value`() {
+
         val name = "header-name"
         val methodMetadata = createTestMethod("name", "java.lang.String", name, null, "default")
 
-        val requestParameters = testedUnit.process(methodMetadata)
+        val requestParameters = requestHeaderProcessor.process(methodMetadata)
 
         assertThat(requestParameters)
             .hasSize(1)
@@ -84,7 +88,7 @@ internal class RequestHeaderProcessorTest {
         val name = "header-name"
         val methodMetadata = createTestMethod("name", "java.lang.String", name, null, null)
 
-        val requestParameters = testedUnit.process(methodMetadata)
+        val requestParameters = requestHeaderProcessor.process(methodMetadata)
 
         assertThat(requestParameters)
             .hasSize(1)
@@ -92,29 +96,9 @@ internal class RequestHeaderProcessorTest {
             .containsExactly(tuple(name, true));
     }
 
-    private fun createTestMethod(paramName: String, paramType: String, headerName: String?, headerRequired: Boolean?, headerDefaultValue: String?) =
-         MethodMetadata(
-            name = "testMethod",
-            visibility = Visibility.PUBLIC,
-            parameters = listOf(
-                ParameterMetadata(
-                    name = paramName,
-                    type = paramType,
-                    annotations = listOf(
-                        AnnotationMetadata(
-                            name = RequestHeader::class.qualifiedName!!,
-                            attributes = mapOf("name" to headerName, "required" to headerRequired, "defaultValue" to headerDefaultValue)
-                                .filterValues { it != null }.mapValues { it.value as Any },
-                            annotations = emptyList()
-                        )
-                    )
-                )
-            ),
-            annotations = emptyList()
-        )
-
     @Test
     internal fun `should extract multiple (2) RequestHeaders`() {
+
         val headerName1 = "stringHeader"
         val headerType1 = "java.lang.String"
         val headerName2 = "doubleHeader"
@@ -130,7 +114,9 @@ internal class RequestHeaderProcessorTest {
                     annotations = listOf(
                         AnnotationMetadata(
                             name = RequestHeader::class.qualifiedName!!,
-                            attributes = mapOf("name" to headerName1),
+                            attributes = mapOf(
+                                "name" to headerName1
+                            ),
                             annotations = emptyList()
                         )
                     )
@@ -141,7 +127,9 @@ internal class RequestHeaderProcessorTest {
                     annotations = listOf(
                         AnnotationMetadata(
                             name = RequestHeader::class.qualifiedName!!,
-                            attributes = mapOf("name" to headerName2),
+                            attributes = mapOf(
+                                "name" to headerName2
+                            ),
                             annotations = emptyList()
                         )
                     )
@@ -150,8 +138,7 @@ internal class RequestHeaderProcessorTest {
             annotations = emptyList()
         )
 
-
-        val requestParameters = testedUnit.process(methodMetadata)
+        val requestParameters = requestHeaderProcessor.process(methodMetadata)
 
         assertThat(requestParameters)
             .hasSize(2)
@@ -159,8 +146,43 @@ internal class RequestHeaderProcessorTest {
             .containsExactlyInAnyOrder(
                 tuple(headerName1, headerType1),
                 tuple(headerName2, headerType2)
-            );
+            )
     }
 
-
+    private fun createTestMethod(
+        paramName: String,
+        paramType: String,
+        headerName: String?,
+        headerRequired: Boolean?,
+        headerDefaultValue: String?
+    ): MethodMetadata {
+        return MethodMetadata(
+            name = "testMethod",
+            visibility = Visibility.PUBLIC,
+            parameters = listOf(
+                ParameterMetadata(
+                    name = paramName,
+                    type = paramType,
+                    annotations = listOf(
+                        AnnotationMetadata(
+                            name = RequestHeader::class.qualifiedName!!,
+                            attributes = buildMap {
+                                if (headerName != null) {
+                                    put("name", headerName)
+                                }
+                                if (headerRequired != null) {
+                                    put("required", headerRequired)
+                                }
+                                if (headerDefaultValue != null) {
+                                    put("defaultValue", headerDefaultValue)
+                                }
+                            },
+                            annotations = emptyList()
+                        )
+                    )
+                )
+            ),
+            annotations = emptyList()
+        )
+    }
 }

@@ -32,12 +32,16 @@ class JarClassScanner(
             .filter(this::isCandidate)
     }
 
-    fun scanApplicationData(entrypoint: Path) =
-        Properties().let { properties ->
-            resourcePatternResolver.getResources("jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF")
-                .map { resource ->
-                    resource.inputStream.use { stream -> properties.load(stream) }
+    fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
+
+        val resourcePattern = "jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF"
+
+        return resourcePatternResolver.getResource(resourcePattern)
+            .let { resource ->
+                val properties = resource.inputStream.use { stream ->
+                    Properties().also { it.load(stream) }
                 }
-            ApplicationMetadata(properties)
-        }
+                ApplicationMetadata(properties)
+            }
+    }
 }

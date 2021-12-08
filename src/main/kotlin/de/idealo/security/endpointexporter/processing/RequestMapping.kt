@@ -54,14 +54,14 @@ data class RequestMapping(
     data class RequestParameter(
         val name: String,
         val type: String,
-        val required: Boolean = true,
+        val required: Boolean,
         val defaultValue: String? = null
     )
 
     data class PathVariable(
         val name: String,
         val type: String,
-        val required: Boolean = true
+        val required: Boolean
     )
 
     data class RequestHeader(

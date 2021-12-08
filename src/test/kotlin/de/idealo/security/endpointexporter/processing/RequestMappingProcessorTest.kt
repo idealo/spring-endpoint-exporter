@@ -1,6 +1,5 @@
 package de.idealo.security.endpointexporter.processing
 
-import java.util.stream.Stream
 import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
@@ -21,10 +20,11 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
+import java.util.stream.Stream
 
 internal class RequestMappingProcessorTest {
 
-    private val requestMappingProcessor = RequestMappingProcessor(requestHeaderProcessor = RequestHeaderProcessor())
+    private val requestMappingProcessor = RequestMappingProcessor()
 
     @Test
     internal fun `should extract RequestMapping for GetMapping with RequestParam`() {

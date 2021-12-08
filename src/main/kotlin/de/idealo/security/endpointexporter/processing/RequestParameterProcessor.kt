@@ -14,11 +14,12 @@ class RequestParameterProcessor : MetadataProcessor<MethodMetadata, RequestMappi
             .map { parameterMetadata ->
                 val parameterAnnotationAttributes = parameterMetadata.getAnnotation(RequestParam::class.qualifiedName!!)!!
                 val defaultValue = parameterAnnotationAttributes.getString("defaultValue")
+                val required = parameterAnnotationAttributes.getBoolean("required")
 
                 RequestMapping.RequestParameter(
                     name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
                     type = parameterMetadata.type,
-                    required = parameterAnnotationAttributes.getBoolean("required") ?: true || defaultValue == null,
+                    required = required ?: (defaultValue == null),
                     defaultValue = defaultValue
                 )
             }

@@ -56,10 +56,10 @@ class ExportService {
 
             requestMapping.requestHeaders.forEach { requestHeader ->
                 operation.addParametersItem(Parameter()
-                    .`in`("header")
                     .name(requestHeader.name)
-                    .schema(mapTypeToSchema(requestHeader.type))
                     .required(requestHeader.required)
+                    .`in`("header")
+                    .schema(mapTypeToSchema(requestHeader.type))
                 )
             }
 
@@ -93,8 +93,8 @@ class ExportService {
                 OpenAPI()
                     .info(
                         Info()
-                            .title("Export for <${applicationMetadata.getApplicationTitle()}>")
-                            .version(applicationMetadata.getApplicationVersion())
+                            .title("Export for <${applicationMetadata.applicationTitle}>")
+                            .version(applicationMetadata.applicationVersion)
                     )
                     .paths(paths)
             )
