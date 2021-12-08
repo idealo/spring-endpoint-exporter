@@ -1,3 +1,4 @@
+[![Build](https://github.com/idealo/spring-endpoint-exporter/actions/workflows/build.yml/badge.svg)](https://github.com/idealo/spring-endpoint-exporter/actions/workflows/build.yml)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=spring-endpoint-exporter&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=spring-endpoint-exporter)
 
 # Spring Endpoint Exporter
