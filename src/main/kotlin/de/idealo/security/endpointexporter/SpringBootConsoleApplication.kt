@@ -36,13 +36,14 @@ class SpringBootConsoleApplication(
             includeFilters = packagesToInclude.map(Pattern::compile),
             excludeFilters = packagesToExclude.map(Pattern::compile)
         )
-        val scanResult = scanner.scan(Path.of(jarPath))
+        val applicationData = scanner.scanApplicationData(Path.of(jarPath))
 
+        val scanResult = scanner.scan(Path.of(jarPath))
         val classToRequestMappings = scanResult.associateBy(
             ClassMetadata::name,
             requestMappingProcessor::process
         )
 
-        exportService.writeAsOpenAPIDefinitions(classToRequestMappings)
+        exportService.writeAsOpenAPIDefinitions(applicationData, classToRequestMappings)
     }
 }

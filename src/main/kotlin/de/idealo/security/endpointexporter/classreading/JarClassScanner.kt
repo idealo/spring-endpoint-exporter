@@ -1,8 +1,10 @@
 package de.idealo.security.endpointexporter.classreading
 
+import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.springframework.core.io.DefaultResourceLoader
 import java.nio.file.Path
+import java.util.Properties
 import java.util.regex.Pattern
 
 class JarClassScanner(
@@ -28,5 +30,29 @@ class JarClassScanner(
             .map { resource -> MetadataReader(resource).classMetadata }
             // apply all include and exclude filters
             .filter(this::isCandidate)
+    }
+
+    fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
+
+        val resourcePattern = "jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF"
+
+        return resourcePatternResolver.getResource(resourcePattern)
+            .let { resource ->
+                when {
+                    resource.exists() -> {
+                        val properties = resource.inputStream.use { stream ->
+                            Properties().also { it.load(stream) }
+                        }
+                        ApplicationMetadata(
+                            applicationTitle = properties.getProperty("Implementation-Title") ?: "n/a",
+                            applicationVersion = properties.getProperty("Implementation-Version") ?: "n/a",
+                        )
+                    }
+                    else -> ApplicationMetadata(
+                        applicationTitle = "n/a",
+                        applicationVersion = "n/a"
+                    )
+                }
+            }
     }
 }

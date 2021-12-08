@@ -1,5 +1,6 @@
 package de.idealo.security.endpointexporter.export
 
+import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.processing.RequestMapping
 import io.swagger.v3.core.util.Json
 import io.swagger.v3.oas.models.OpenAPI
@@ -26,7 +27,7 @@ import kotlin.io.path.bufferedWriter
 class ExportService {
 
     // TODO: finish implementation
-    fun writeAsOpenAPIDefinitions(classToRequestMappings: Map<String, List<RequestMapping>>) {
+    fun writeAsOpenAPIDefinitions(applicationMetadata: ApplicationMetadata, classToRequestMappings: Map<String, List<RequestMapping>>) {
 
         val outFile = Path.of("./open-api.json")
 
@@ -50,6 +51,15 @@ class ExportService {
                     .required(pathVariable.required)
                     .`in`("path")
                     .schema(mapTypeToSchema(pathVariable.type))
+                )
+            }
+
+            requestMapping.requestHeaders.forEach { requestHeader ->
+                operation.addParametersItem(Parameter()
+                    .name(requestHeader.name)
+                    .required(requestHeader.required)
+                    .`in`("header")
+                    .schema(mapTypeToSchema(requestHeader.type))
                 )
             }
 
@@ -83,8 +93,8 @@ class ExportService {
                 OpenAPI()
                     .info(
                         Info()
-                            .title("Export for <application>")
-                            .version("1.0.0")
+                            .title("Export for <${applicationMetadata.applicationTitle}>")
+                            .version(applicationMetadata.applicationVersion)
                     )
                     .paths(paths)
             )

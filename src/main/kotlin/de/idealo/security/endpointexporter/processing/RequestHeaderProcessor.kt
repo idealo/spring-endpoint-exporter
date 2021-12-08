@@ -3,24 +3,25 @@ package de.idealo.security.endpointexporter.processing
 import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
 import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
-import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.stereotype.Component
+import org.springframework.web.bind.annotation.RequestHeader
 
-class RequestParameterProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestParameter> {
+@Component
+class RequestHeaderProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestHeader> {
 
-    override fun process(metadata: MethodMetadata): List<RequestMapping.RequestParameter> {
+    override fun process(metadata: MethodMetadata): List<RequestMapping.RequestHeader> {
 
         return metadata.parameters
-            .filter { it.isAnnotated(RequestParam::class.qualifiedName!!) }
+            .filter { it.isAnnotated(RequestHeader::class.qualifiedName!!) }
             .map { parameterMetadata ->
-                val parameterAnnotationAttributes = parameterMetadata.getAnnotation(RequestParam::class.qualifiedName!!)!!
+                val parameterAnnotationAttributes = parameterMetadata.getAnnotation(RequestHeader::class.qualifiedName!!)!!
                 val defaultValue = parameterAnnotationAttributes.getString("defaultValue")
                 val required = parameterAnnotationAttributes.getBoolean("required")
 
-                RequestMapping.RequestParameter(
+                RequestMapping.RequestHeader(
                     name = getParameterName(parameterMetadata, parameterAnnotationAttributes),
                     type = parameterMetadata.type,
-                    required = required ?: (defaultValue == null),
-                    defaultValue = defaultValue
+                    required = required ?: (defaultValue == null)
                 )
             }
     }

@@ -26,7 +26,6 @@ internal class RequestParameterProcessorTest {
                         AnnotationMetadata(
                             name = RequestParam::class.qualifiedName!!,
                             attributes = mapOf(
-                                "required" to false,
                                 "defaultValue" to "testDefaultValue"
                             ),
                             annotations = emptyList()
