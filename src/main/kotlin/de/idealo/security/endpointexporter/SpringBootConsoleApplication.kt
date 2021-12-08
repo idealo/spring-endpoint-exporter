@@ -1,7 +1,5 @@
 package de.idealo.security.endpointexporter
 
-import java.nio.file.Path
-import java.util.regex.Pattern
 import de.idealo.security.endpointexporter.classreading.JarClassScanner
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import de.idealo.security.endpointexporter.export.ExportService
@@ -10,6 +8,8 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
+import java.nio.file.Path
+import java.util.regex.Pattern
 
 fun main(args: Array<String>) {
     runApplication<SpringBootConsoleApplication>(*args)

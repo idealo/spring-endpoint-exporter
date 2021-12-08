@@ -1,7 +1,5 @@
 package de.idealo.security.endpointexporter.export
 
-import java.nio.file.Path
-import kotlin.io.path.bufferedWriter
 import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.processing.RequestMapping
 import io.swagger.v3.core.util.Json
@@ -22,6 +20,8 @@ import io.swagger.v3.oas.models.responses.ApiResponse
 import io.swagger.v3.oas.models.responses.ApiResponses
 import org.springframework.http.HttpMethod
 import org.springframework.stereotype.Service
+import java.nio.file.Path
+import kotlin.io.path.bufferedWriter
 
 @Service
 class ExportService {
