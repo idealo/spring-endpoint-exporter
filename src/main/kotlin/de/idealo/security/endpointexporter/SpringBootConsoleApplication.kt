@@ -1,5 +1,7 @@
 package de.idealo.security.endpointexporter
 
+import java.nio.file.Path
+import java.util.regex.Pattern
 import de.idealo.security.endpointexporter.classreading.JarClassScanner
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import de.idealo.security.endpointexporter.export.ExportService
@@ -8,8 +10,6 @@ import org.springframework.boot.ApplicationArguments
 import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
-import java.nio.file.Path
-import java.util.regex.Pattern
 
 fun main(args: Array<String>) {
     runApplication<SpringBootConsoleApplication>(*args)
@@ -36,13 +36,14 @@ class SpringBootConsoleApplication(
             includeFilters = packagesToInclude.map(Pattern::compile),
             excludeFilters = packagesToExclude.map(Pattern::compile)
         )
-        val scanResult = scanner.scan(Path.of(jarPath))
+        val applicationData = scanner.scanApplicationData(Path.of(jarPath))
 
+        val scanResult = scanner.scan(Path.of(jarPath))
         val classToRequestMappings = scanResult.associateBy(
             ClassMetadata::name,
             requestMappingProcessor::process
         )
 
-        exportService.writeAsOpenAPIDefinitions(classToRequestMappings)
+        exportService.writeAsOpenAPIDefinitions(applicationData, classToRequestMappings)
     }
 }

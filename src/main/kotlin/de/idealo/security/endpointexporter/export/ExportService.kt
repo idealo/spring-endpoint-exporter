@@ -2,6 +2,7 @@ package de.idealo.security.endpointexporter.export
 
 import java.nio.file.Path
 import kotlin.io.path.bufferedWriter
+import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.processing.RequestMapping
 import io.swagger.v3.core.util.Json
 import io.swagger.v3.oas.models.OpenAPI
@@ -26,7 +27,7 @@ import org.springframework.stereotype.Service
 class ExportService {
 
     // TODO: finish implementation
-    fun writeAsOpenAPIDefinitions(classToRequestMappings: Map<String, List<RequestMapping>>) {
+    fun writeAsOpenAPIDefinitions(applicationMetadata: ApplicationMetadata, classToRequestMappings: Map<String, List<RequestMapping>>) {
 
         val outFile = Path.of("./open-api.json")
 
@@ -92,8 +93,8 @@ class ExportService {
                 OpenAPI()
                     .info(
                         Info()
-                            .title("Export for <application>")
-                            .version("1.0.0")
+                            .title("Export for <${applicationMetadata.getApplicationTitle()}>")
+                            .version(applicationMetadata.getApplicationVersion())
                     )
                     .paths(paths)
             )

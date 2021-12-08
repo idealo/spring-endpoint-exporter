@@ -1,9 +1,12 @@
 package de.idealo.security.endpointexporter.classreading
 
+import java.nio.file.Path
+import java.util.Properties
+import java.util.regex.Pattern
+import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.springframework.core.io.DefaultResourceLoader
-import java.nio.file.Path
-import java.util.regex.Pattern
+
 
 class JarClassScanner(
     includeFilters: List<Pattern> = emptyList(),
@@ -29,4 +32,13 @@ class JarClassScanner(
             // apply all include and exclude filters
             .filter(this::isCandidate)
     }
+
+    fun scanApplicationData(entrypoint: Path) =
+        resourcePatternResolver.getResources("jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF")
+            .firstOrNull()?.inputStream.use { stream ->
+                val properties = Properties().apply {
+                    load(stream)
+                }
+                ApplicationMetadata(properties)
+            }
 }
