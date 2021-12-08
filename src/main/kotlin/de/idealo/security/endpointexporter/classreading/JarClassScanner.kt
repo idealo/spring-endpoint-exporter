@@ -34,11 +34,11 @@ class JarClassScanner(
     }
 
     fun scanApplicationData(entrypoint: Path) =
-        resourcePatternResolver.getResources("jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF")
-            .firstOrNull()?.inputStream.use { stream ->
-                val properties = Properties().apply {
-                    load(stream)
+        Properties().let { properties ->
+            resourcePatternResolver.getResources("jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF")
+                .map { resource ->
+                    resource.inputStream.use { stream -> properties.load(stream) }
                 }
                 ApplicationMetadata(properties)
-            }
+        }
 }
