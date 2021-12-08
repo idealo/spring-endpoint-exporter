@@ -38,10 +38,21 @@ class JarClassScanner(
 
         return resourcePatternResolver.getResource(resourcePattern)
             .let { resource ->
-                val properties = resource.inputStream.use { stream ->
-                    Properties().also { it.load(stream) }
+                when {
+                    resource.exists() -> {
+                        val properties = resource.inputStream.use { stream ->
+                            Properties().also { it.load(stream) }
+                        }
+                        ApplicationMetadata(
+                            applicationTitle = properties.getProperty("Implementation-Title") ?: "n/a",
+                            applicationVersion = properties.getProperty("Implementation-Version") ?: "n/a",
+                        )
+                    }
+                    else -> ApplicationMetadata(
+                        applicationTitle = "n/a",
+                        applicationVersion = "n/a"
+                    )
                 }
-                ApplicationMetadata(properties)
             }
     }
 }
