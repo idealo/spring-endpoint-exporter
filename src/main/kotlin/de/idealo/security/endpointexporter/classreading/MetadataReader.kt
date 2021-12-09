@@ -17,8 +17,8 @@ class MetadataReader(resource: Resource) {
     }
 
     private fun getClassReader(resource: Resource): ClassReader {
-        resource.inputStream.use {
-            return try {
+        return resource.inputStream.use {
+            try {
                 ClassReader(it)
             } catch (e: IllegalArgumentException) {
                 throw IOException(

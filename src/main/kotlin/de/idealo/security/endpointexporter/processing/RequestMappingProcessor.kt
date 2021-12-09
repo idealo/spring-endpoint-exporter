@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RequestMapping as RequestMappingA
 
 @Service
 class RequestMappingProcessor(
-    private val requestParameterProcessor: RequestParameterProcessor = RequestParameterProcessor(),
-    private val pathVariableProcessor: PathVariableProcessor = PathVariableProcessor(),
-    private val requestHeaderProcessor: RequestHeaderProcessor = RequestHeaderProcessor(),
+    private val requestParameterProcessor: RequestParameterProcessor,
+    private val pathVariableProcessor: PathVariableProcessor,
+    private val requestHeaderProcessor: RequestHeaderProcessor,
     private val patternParser: PathPatternParser = PathPatternParser()
 ) : MetadataProcessor<ClassMetadata, RequestMapping> {
 

@@ -3,8 +3,10 @@ package de.idealo.security.endpointexporter.processing
 import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
 import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.RequestParam
 
+@Component
 class RequestParameterProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestParameter> {
 
     override fun process(metadata: MethodMetadata): List<RequestMapping.RequestParameter> {

@@ -34,25 +34,23 @@ class JarClassScanner(
 
     fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
 
-        val resourcePattern = "jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/**/MANIFEST.MF"
+        val resourcePattern = "jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/META-INF/MANIFEST.MF"
+        val resource = resourcePatternResolver.getResource(resourcePattern)
 
-        return resourcePatternResolver.getResource(resourcePattern)
-            .let { resource ->
-                when {
-                    resource.exists() -> {
-                        val properties = resource.inputStream.use { stream ->
-                            Properties().also { it.load(stream) }
-                        }
-                        ApplicationMetadata(
-                            applicationTitle = properties.getProperty("Implementation-Title") ?: "n/a",
-                            applicationVersion = properties.getProperty("Implementation-Version") ?: "n/a",
-                        )
-                    }
-                    else -> ApplicationMetadata(
-                        applicationTitle = "n/a",
-                        applicationVersion = "n/a"
-                    )
+        return when {
+            resource.exists() -> {
+                val properties = resource.inputStream.use { stream ->
+                    Properties().also { it.load(stream) }
                 }
+                ApplicationMetadata(
+                    title = properties.getProperty("Implementation-Title") ?: "n/a",
+                    version = properties.getProperty("Implementation-Version") ?: "n/a",
+                )
             }
+            else -> ApplicationMetadata(
+                title = "n/a",
+                version = "n/a"
+            )
+        }
     }
 }

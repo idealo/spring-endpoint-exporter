@@ -20,11 +20,17 @@ import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
+import org.springframework.web.util.pattern.PathPatternParser
 import java.util.stream.Stream
 
 internal class RequestMappingProcessorTest {
 
-    private val requestMappingProcessor = RequestMappingProcessor()
+    private val requestMappingProcessor = RequestMappingProcessor(
+        requestParameterProcessor = RequestParameterProcessor(),
+        pathVariableProcessor = PathVariableProcessor(),
+        requestHeaderProcessor = RequestHeaderProcessor(),
+        patternParser = PathPatternParser()
+    )
 
     @Test
     internal fun `should extract RequestMapping for GetMapping with RequestParam`() {

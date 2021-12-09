@@ -4,8 +4,10 @@ import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
 import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
 import de.idealo.security.endpointexporter.processing.RequestMapping.PathVariable
+import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.PathVariable as PathVariableAnnotation
 
+@Component
 class PathVariableProcessor : MetadataProcessor<MethodMetadata, PathVariable> {
 
     override fun process(metadata: MethodMetadata): List<PathVariable> {
