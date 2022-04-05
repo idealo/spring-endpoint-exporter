@@ -35,7 +35,7 @@
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.version>1.6.20</kotlin.version>
 
-        <asm.version>9.2</asm.version>
+        <asm.version>9.3</asm.version>
         <swagger.version>2.1.13</swagger.version>
         <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
     </properties>
