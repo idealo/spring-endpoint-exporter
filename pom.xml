@@ -37,7 +37,7 @@
 
         <asm.version>9.3</asm.version>
         <swagger.version>2.2.0</swagger.version>
-        <jacoco-maven-plugin.version>0.8.7</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     </properties>
 
     <dependencies>
