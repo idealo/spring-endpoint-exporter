@@ -8,8 +8,8 @@ import java.util.Properties
 import java.util.regex.Pattern
 
 class JarClassScanner(
-    includeFilters: List<Pattern> = emptyList(),
-    excludeFilters: List<Pattern> = emptyList()
+    includeFilters: Set<Pattern> = emptySet(),
+    excludeFilters: Set<Pattern> = emptySet()
 ) : ClassScanner(
     includeFilters = includeFilters,
     excludeFilters = excludeFilters,

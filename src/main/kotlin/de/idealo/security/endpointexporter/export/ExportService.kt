@@ -27,9 +27,11 @@ import kotlin.io.path.bufferedWriter
 class ExportService {
 
     // TODO: finish implementation
-    fun writeAsOpenAPIDefinitions(applicationMetadata: ApplicationMetadata, classToRequestMappings: Map<String, List<RequestMapping>>) {
-
-        val outFile = Path.of("./open-api.json")
+    fun writeAsOpenAPIDefinitions(
+        applicationMetadata: ApplicationMetadata,
+        classToRequestMappings: Map<String, List<RequestMapping>>,
+        outputPath: Path
+    ) {
 
         val paths = Paths()
         classToRequestMappings.values.flatten().forEach { requestMapping ->
@@ -37,29 +39,32 @@ class ExportService {
             val operation = Operation().summary("summary")
 
             requestMapping.requestParameters.forEach { requestParameter ->
-                operation.addParametersItem(Parameter()
-                    .name(requestParameter.name)
-                    .required(requestParameter.required)
-                    .`in`("query")
-                    .schema(mapTypeToSchema(requestParameter.type))
+                operation.addParametersItem(
+                    Parameter()
+                        .name(requestParameter.name)
+                        .required(requestParameter.required)
+                        .`in`("query")
+                        .schema(mapTypeToSchema(requestParameter.type))
                 )
             }
 
             requestMapping.pathVariables.forEach { pathVariable ->
-                operation.addParametersItem(Parameter()
-                    .name(pathVariable.name)
-                    .required(pathVariable.required)
-                    .`in`("path")
-                    .schema(mapTypeToSchema(pathVariable.type))
+                operation.addParametersItem(
+                    Parameter()
+                        .name(pathVariable.name)
+                        .required(pathVariable.required)
+                        .`in`("path")
+                        .schema(mapTypeToSchema(pathVariable.type))
                 )
             }
 
             requestMapping.requestHeaders.forEach { requestHeader ->
-                operation.addParametersItem(Parameter()
-                    .name(requestHeader.name)
-                    .required(requestHeader.required)
-                    .`in`("header")
-                    .schema(mapTypeToSchema(requestHeader.type))
+                operation.addParametersItem(
+                    Parameter()
+                        .name(requestHeader.name)
+                        .required(requestHeader.required)
+                        .`in`("header")
+                        .schema(mapTypeToSchema(requestHeader.type))
                 )
             }
 
@@ -73,12 +78,14 @@ class ExportService {
                     )
             )
 
-            operation.extensions(mapOf(
-                "x-consumes" to requestMapping.consumes.joinToString(", "),
-                "x-produces" to requestMapping.produces.joinToString(", "),
-                "x-declaring-class-name" to requestMapping.declaringClassName,
-                "x-method-name" to requestMapping.methodName
-            ))
+            operation.extensions(
+                mapOf(
+                    "x-consumes" to requestMapping.consumes.joinToString(", "),
+                    "x-produces" to requestMapping.produces.joinToString(", "),
+                    "x-declaring-class-name" to requestMapping.declaringClassName,
+                    "x-method-name" to requestMapping.methodName
+                )
+            )
 
             requestMapping.httpMethods.forEach { httpMethod ->
                 paths.addPathItem(
@@ -88,8 +95,9 @@ class ExportService {
             }
         }
 
-        outFile.bufferedWriter().use { writer ->
-            Json.pretty().writeValue(writer,
+        outputPath.bufferedWriter().use { writer ->
+            Json.pretty().writeValue(
+                writer,
                 OpenAPI()
                     .info(
                         Info()

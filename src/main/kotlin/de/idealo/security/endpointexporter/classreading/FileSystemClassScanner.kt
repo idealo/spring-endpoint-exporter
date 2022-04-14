@@ -7,8 +7,8 @@ import java.util.regex.Pattern
 import kotlin.io.path.pathString
 
 class FileSystemClassScanner(
-    includeFilters: List<Pattern> = emptyList(),
-    excludeFilters: List<Pattern> = emptyList()
+    includeFilters: Set<Pattern> = emptySet(),
+    excludeFilters: Set<Pattern> = emptySet()
 ) : ClassScanner(
     includeFilters = includeFilters,
     excludeFilters = excludeFilters,

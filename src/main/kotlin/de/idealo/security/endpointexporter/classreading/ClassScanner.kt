@@ -7,8 +7,8 @@ import java.nio.file.Path
 import java.util.regex.Pattern
 
 abstract class ClassScanner(
-    private val includeFilters: List<Pattern>,
-    private val excludeFilters: List<Pattern>,
+    private val includeFilters: Set<Pattern>,
+    private val excludeFilters: Set<Pattern>,
     resourceLoader: ResourceLoader
 ) {
 

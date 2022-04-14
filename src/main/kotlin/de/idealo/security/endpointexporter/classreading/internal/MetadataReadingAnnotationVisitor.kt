@@ -51,11 +51,13 @@ internal class MetadataReadingAnnotationVisitor private constructor(
     }
 
     override fun visitEnd() {
-        callback(AnnotationMetadata(
-            name = name,
-            attributes = attributes,
-            annotations = annotations
-        ))
+        callback(
+            AnnotationMetadata(
+                name = name,
+                attributes = attributes,
+                annotations = annotations
+            )
+        )
     }
 
     private class MetadataReadingAnnotationArrayVisitor(

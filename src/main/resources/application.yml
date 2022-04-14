@@ -3,3 +3,9 @@ spring:
     web-application-type: none
   jackson:
     default-property-inclusion: non_empty
+
+exporter:
+  jar-path: ~
+  output-path: ./open-api.json
+  include-filters: ~
+  exclude-filters: ~

@@ -32,10 +32,12 @@ internal class MetadataReadingMethodVisitor(
     }
 
     override fun visitParameter(name: String?, access: Int) {
-        parameters.add(ParameterMetadata.Builder(
-            name = name ?: "arg$currentParameter",
-            type = Type.getArgumentTypes(descriptor)[currentParameter].className
-        ))
+        parameters.add(
+            ParameterMetadata.Builder(
+                name = name ?: "arg$currentParameter",
+                type = Type.getArgumentTypes(descriptor)[currentParameter].className
+            )
+        )
         currentParameter++
     }
 
@@ -48,11 +50,13 @@ internal class MetadataReadingMethodVisitor(
     }
 
     override fun visitEnd() {
-        callback(MethodMetadata(
-            name = name,
-            visibility = Visibility.of(access),
-            parameters = parameters.map(ParameterMetadata.Builder::build),
-            annotations = annotations
-        ))
+        callback(
+            MethodMetadata(
+                name = name,
+                visibility = Visibility.of(access),
+                parameters = parameters.map(ParameterMetadata.Builder::build),
+                annotations = annotations
+            )
+        )
     }
 }
