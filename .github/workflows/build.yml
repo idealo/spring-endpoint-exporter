@@ -17,7 +17,7 @@ jobs:
     name: Build
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3.0.0
+      - uses: actions/checkout@v3
         with:
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
@@ -50,8 +50,11 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
 
-      - name: Build and Publish Docker Image
-        run: mvn -B -ntp -DskipTests spring-boot:build-image -Dspring-boot.build-image.publish=true
+      - name: Create new release
+        uses: cycjimmy/semantic-release-action@v3
+        with:
+          extra_plugins: |
+            @semantic-release/git
+            @semantic-release/exec
         env:
-          USERNAME: ${{ github.actor }}
-          PASSWORD: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
