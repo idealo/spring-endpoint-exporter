@@ -26,7 +26,6 @@ import kotlin.io.path.bufferedWriter
 @Service
 class ExportService {
 
-    // TODO: finish implementation
     fun writeAsOpenAPIDefinitions(
         applicationMetadata: ApplicationMetadata,
         classToRequestMappings: Map<String, List<RequestMapping>>,

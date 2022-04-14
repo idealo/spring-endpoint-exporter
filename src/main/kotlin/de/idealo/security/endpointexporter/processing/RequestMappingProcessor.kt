@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.PutMapping
-import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.util.pattern.PathPatternParser
 import org.springframework.web.bind.annotation.RequestMapping as RequestMappingAnnotation
 
@@ -22,8 +21,9 @@ class RequestMappingProcessor(
     private val requestParameterProcessor: RequestParameterProcessor,
     private val pathVariableProcessor: PathVariableProcessor,
     private val requestHeaderProcessor: RequestHeaderProcessor,
+    private val responseStatusProcessor: ResponseStatusProcessor,
     private val patternParser: PathPatternParser = PathPatternParser()
-) : MetadataProcessor<ClassMetadata, RequestMapping> {
+) : MetadataProcessor<ClassMetadata, List<RequestMapping>> {
 
     private val requestMappingAnnotations = listOf(
         RequestMappingAnnotation::class.qualifiedName!!,
@@ -76,11 +76,7 @@ class RequestMappingProcessor(
             RequestMapping(
                 urlPattern = patternParser.parse(urlPattern),
                 httpMethods = httpMethods.mapNotNull { HttpMethod.resolve(it) }.toSet(),
-                // TODO: support the value attribute for @ResponseStatus
-                responseStatus = methodMetadata?.getAnnotation(ResponseStatus::class.qualifiedName!!)
-                    ?.getString("code")
-                    ?.let { HttpStatus.valueOf(it) }
-                    ?: HttpStatus.OK,
+                responseStatus = methodMetadata?.let { responseStatusProcessor.process(it) } ?: HttpStatus.OK,
                 requestParameters = methodMetadata?.let { requestParameterProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
                 requestHeaders = methodMetadata?.let { requestHeaderProcessor.process(it) } ?: emptyList(),

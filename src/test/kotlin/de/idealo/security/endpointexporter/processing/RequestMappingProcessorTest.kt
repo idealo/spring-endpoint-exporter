@@ -29,6 +29,7 @@ internal class RequestMappingProcessorTest {
         requestParameterProcessor = RequestParameterProcessor(),
         pathVariableProcessor = PathVariableProcessor(),
         requestHeaderProcessor = RequestHeaderProcessor(),
+        responseStatusProcessor = ResponseStatusProcessor(),
         patternParser = PathPatternParser()
     )
 

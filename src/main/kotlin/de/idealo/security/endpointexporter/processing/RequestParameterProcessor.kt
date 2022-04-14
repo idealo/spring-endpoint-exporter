@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.RequestParam
 
 @Component
-class RequestParameterProcessor : MetadataProcessor<MethodMetadata, RequestMapping.RequestParameter> {
+class RequestParameterProcessor : MetadataProcessor<MethodMetadata, List<RequestMapping.RequestParameter>> {
 
     override fun process(metadata: MethodMetadata): List<RequestMapping.RequestParameter> {
 

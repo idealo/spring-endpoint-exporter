@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component
 import org.springframework.web.bind.annotation.PathVariable as PathVariableAnnotation
 
 @Component
-class PathVariableProcessor : MetadataProcessor<MethodMetadata, PathVariable> {
+class PathVariableProcessor : MetadataProcessor<MethodMetadata, List<PathVariable>> {
 
     override fun process(metadata: MethodMetadata): List<PathVariable> {
 
