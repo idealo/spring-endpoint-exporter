@@ -32,8 +32,6 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>idealo</sonar.organization>
 
-        <spring-boot.build-image.imageName>idealo/${project.artifactId}:${project.version}</spring-boot.build-image.imageName>
-
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.version>1.6.20</kotlin.version>
         <java.version>11</java.version>
@@ -107,6 +105,22 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <!-- See: https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image.examples -->
+                <configuration>
+                    <image>
+                        <name>ghcr.io/idealo/${project.artifactId}:${project.version}</name>
+                        <env>
+                            <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
+                        </env>
+                    </image>
+                    <docker>
+                        <publishRegistry>
+                            <url>https://ghcr.io</url>
+                            <username>${env.USERNAME}</username>
+                            <password>${env.PASSWORD}</password>
+                        </publishRegistry>
+                    </docker>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
