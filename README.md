@@ -14,7 +14,7 @@ applies [Spring Boot](https://github.com/spring-projects/spring-boot) specific r
 into [OpenAPI 3 format](https://swagger.io/docs/specification/about/) and written to a file. This file can now be used, for example
 with [ZAP](https://github.com/zaproxy/zaproxy), to dynamically scan an application for security issues.
 
-## How to build the application
+## Building
 
 Simply run the following command:
 
@@ -25,7 +25,7 @@ mvn clean package
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.1.0.jar
+java -jar ./target/spring-endpoint-exporter-0.2.1.jar
 ```
 
 ## Configuration Properties
@@ -41,13 +41,13 @@ You can pass properties to the application using environment variables or comman
 
 ```
 export EXPORTER_JAR_PATH=/data/app.jar
-java -jar ./target/spring-endpoint-exporter-0.1.0.jar
+java -jar ./target/spring-endpoint-exporter-0.2.1.jar
 ```
 
 or
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.1.0.jar --exporter.jar-path="/data/app.jar"
+java -jar ./target/spring-endpoint-exporter-0.2.1.jar --exporter.jar-path="/data/app.jar"
 ```
 
 ## Known limitations
@@ -87,3 +87,7 @@ public @interface CustomRequestMapping {
 
 However, it correctly handles the builtin variants of `@RequestMapping`, e.g.: `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`
 and `@PatchMapping`.
+
+## License
+
+This project is licensed under the Apache-2.0 License. See the [LICENSE](LICENSE) file for the full license text.
