@@ -9,7 +9,11 @@ on:
       - 'pom.xml'
 
 permissions:
-  contents: read
+  # used by semantic release
+  contents: write
+  issues: write
+  pull-requests: write
+  # used to publish the docker image
   packages: write
 
 jobs:
