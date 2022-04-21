@@ -30,12 +30,12 @@ java -jar ./target/spring-endpoint-exporter-0.2.1.jar
 
 ## Configuration Properties
 
-| Property                   | Type           | Description                                                      | Default value       |
-|----------------------------|----------------|------------------------------------------------------------------|---------------------|
-| `exporter.jar-path`        | `Path`         | The jar to export all request mappings from                      | `null`              |
-| `exporter.output-path`     | `Path`         | Where to output the result of the exporter                       | `"./open-api.json"` |
-| `exporter.include-filters` | `Set<Pattern>` | A list of packages to include when scanning for request mappings | `null`              |
-| `exporter.exclude-filters` | `Set<Pattern>` | A list of packages to exclude when scanning for request mappings | `null`              |
+| Property                   | Type           | Description                                                     | Default value       |
+|----------------------------|----------------|-----------------------------------------------------------------|---------------------|
+| `exporter.jar-path`        | `Path`         | The jar to export all request mappings from                     | `null`              |
+| `exporter.output-path`     | `Path`         | Where to output the result of the exporter                      | `"./open-api.json"` |
+| `exporter.include-filters` | `Set<Pattern>` | A set of packages to include when scanning for request mappings | `null`              |
+| `exporter.exclude-filters` | `Set<Pattern>` | A set of packages to exclude when scanning for request mappings | `null`              |
 
 You can pass properties to the application using environment variables or command line arguments. E.g.:
 
