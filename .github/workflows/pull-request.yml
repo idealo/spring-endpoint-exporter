@@ -1,6 +1,6 @@
 name: Verify Pull Request
 on:
-  pull_request_target:
+  pull_request:
     paths:
       - 'src/**'
       - 'pom.xml'
@@ -13,7 +13,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          ref: ${{ github.event.pull_request.head.sha }}
           fetch-depth: 0 # Shallow clones should be disabled for a better relevancy of analysis
 
       - name: Set up JDK 11
