@@ -5,6 +5,7 @@ on:
       - opened
       - edited
       - synchronize
+
 permissions:
   pull-requests: read
 
