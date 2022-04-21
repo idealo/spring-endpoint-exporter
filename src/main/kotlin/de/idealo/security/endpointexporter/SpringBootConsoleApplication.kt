@@ -10,6 +10,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
 
+// test
 fun main(args: Array<String>) {
     runApplication<SpringBootConsoleApplication>(*args)
 }
