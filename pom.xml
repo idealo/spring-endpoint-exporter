@@ -107,6 +107,15 @@
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>${image.name}</name>
+                        <builder>paketobuildpacks/builder:tiny</builder>
+                        <env>
+                            <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
+                        </env>
+                    </image>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
@@ -186,11 +195,7 @@
                         <!-- See: https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image.examples -->
                         <configuration>
                             <image>
-                                <name>${image.name}</name>
                                 <publish>true</publish>
-                                <env>
-                                    <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
-                                </env>
                             </image>
                             <docker>
                                 <publishRegistry>
