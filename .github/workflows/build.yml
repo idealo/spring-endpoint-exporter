@@ -59,7 +59,7 @@ jobs:
       - name: Scan Docker Image for Vulnerabilities
         uses: aquasecurity/trivy-action@0.2.5
         with:
-          image-ref: ${{ steps.get-image-name.outputs.get-image-name }}
+          image-ref: ${{ steps.get-image-name.outputs.image-name }}
           format: sarif
           output: trivy-results.sarif
 
