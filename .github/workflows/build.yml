@@ -15,6 +15,8 @@ permissions:
   pull-requests: write
   # used to publish the docker image
   packages: write
+  # used by trivy
+  security-events: write
 
 jobs:
   build:
@@ -41,12 +43,6 @@ jobs:
       - name: Run Tests
         run: mvn -B -ntp -Psonar-coverage verify
 
-      - name: Analyze with SonarCloud
-        run: mvn -B -ntp org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -Dsonar.projectKey=spring-endpoint-exporter
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-
       - name: Create new release
         uses: cycjimmy/semantic-release-action@v3
         with:
@@ -55,3 +51,19 @@ jobs:
             @semantic-release/exec
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Get Image Name
+        id: get-image-name
+        run: echo "::set-output name=image-name::$(mvn help:evaluate -Dexpression=image.name -q -DforceStdout)"
+
+      - name: Scan Docker Image for Vulnerabilities
+        uses: aquasecurity/trivy-action@0.2.5
+        with:
+          image-ref: ${{ steps.get-image-name.outputs.get-image-name }}
+          format: sarif
+          output: trivy-results.sarif
+
+      - name: Upload Trivy Results to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v1
+        with:
+          sarif_file: trivy-results.sarif

@@ -32,6 +32,8 @@
         <sonar.host.url>https://sonarcloud.io</sonar.host.url>
         <sonar.organization>idealo</sonar.organization>
 
+        <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}</image.name>
+
         <kotlin.code.style>official</kotlin.code.style>
         <kotlin.version>1.6.21</kotlin.version>
         <java.version>11</java.version>
@@ -184,7 +186,7 @@
                         <!-- See: https://docs.spring.io/spring-boot/docs/current/maven-plugin/reference/htmlsingle/#build-image.examples -->
                         <configuration>
                             <image>
-                                <name>ghcr.io/idealo/${project.artifactId}:${project.version}</name>
+                                <name>${image.name}</name>
                                 <publish>true</publish>
                                 <env>
                                     <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
