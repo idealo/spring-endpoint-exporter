@@ -13,7 +13,7 @@
 
     <groupId>de.idealo.security</groupId>
     <artifactId>spring-endpoint-exporter</artifactId>
-    <version>0.2.5</version>
+    <version>0.2.6</version>
 
     <licenses>
         <license>
