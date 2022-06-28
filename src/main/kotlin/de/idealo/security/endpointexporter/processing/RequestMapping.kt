@@ -2,6 +2,7 @@ package de.idealo.security.endpointexporter.processing
 
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
+import org.springframework.http.MediaType
 import org.springframework.web.util.pattern.PathPattern
 
 data class RequestMapping(
@@ -16,6 +17,25 @@ data class RequestMapping(
     val declaringClassName: String? = null,
     val methodName: String? = null
 ) {
+
+    data class RequestParameter(
+        val name: String,
+        val type: String,
+        val required: Boolean,
+        val defaultValue: String? = null
+    )
+
+    data class PathVariable(
+        val name: String,
+        val type: String,
+        val required: Boolean
+    )
+
+    data class RequestHeader(
+        val name: String,
+        val type: String,
+        val required: Boolean
+    )
 
     fun combine(other: RequestMapping): RequestMapping {
         return RequestMapping(
@@ -44,29 +64,17 @@ data class RequestMapping(
             requestParameters = this.requestParameters,
             pathVariables = this.pathVariables,
             requestHeaders = this.requestHeaders,
-            consumes = this.consumes,
-            produces = this.produces,
+            consumes = normalizeMediaTypes(this.consumes),
+            produces = normalizeMediaTypes(this.produces),
             declaringClassName = this.declaringClassName,
             methodName = this.methodName
         )
     }
 
-    data class RequestParameter(
-        val name: String,
-        val type: String,
-        val required: Boolean,
-        val defaultValue: String? = null
-    )
-
-    data class PathVariable(
-        val name: String,
-        val type: String,
-        val required: Boolean
-    )
-
-    data class RequestHeader(
-        val name: String,
-        val type: String,
-        val required: Boolean
-    )
+    private fun normalizeMediaTypes(mediaTypes: List<String>): List<String> {
+        return when {
+            mediaTypes.isEmpty() -> listOf(MediaType.ALL_VALUE)
+            else -> mediaTypes
+        }
+    }
 }

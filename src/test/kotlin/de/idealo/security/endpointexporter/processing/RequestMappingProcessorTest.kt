@@ -1,5 +1,6 @@
 package de.idealo.security.endpointexporter.processing
 
+import de.idealo.security.endpointexporter.classreading.MetadataReader
 import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
@@ -10,6 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
+import org.springframework.core.io.PathResource
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -21,9 +23,15 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.ResponseStatus
 import org.springframework.web.util.pattern.PathPatternParser
+import java.nio.file.Path
 import java.util.stream.Stream
 
 internal class RequestMappingProcessorTest {
+
+    /**
+     * @see de.idealo.security.endpointexporter.test.PersonController
+     */
+    private val testControllerClass = Path.of("target/test-classes/de/idealo/security/endpointexporter/test/PersonController.class")
 
     private val requestMappingProcessor = RequestMappingProcessor(
         requestParameterProcessor = RequestParameterProcessor(),
@@ -32,6 +40,37 @@ internal class RequestMappingProcessorTest {
         responseStatusProcessor = ResponseStatusProcessor(),
         patternParser = PathPatternParser()
     )
+
+    @Test
+    internal fun `should extract RequestMapping from actual class file`() {
+
+        val metadataReader = MetadataReader(PathResource(testControllerClass))
+
+        val requestMappings = requestMappingProcessor.process(metadataReader.classMetadata)
+
+        assertThat(requestMappings).hasSize(2)
+        assertThat(requestMappings).allMatch { requestMapping ->
+            requestMapping.declaringClassName == "de.idealo.security.endpointexporter.test.PersonController"
+        }
+
+        assertThat(requestMappings[0].methodName).isEqualTo("getPersons")
+        assertThat(requestMappings[0].httpMethods).containsExactly(HttpMethod.GET)
+        assertThat(requestMappings[0].urlPattern.patternString).isEqualTo("/persons")
+        assertThat(requestMappings[0].consumes).containsExactly("*/*")
+        assertThat(requestMappings[0].produces).containsExactly("*/*")
+        assertThat(requestMappings[0].responseStatus).isEqualTo(HttpStatus.OK)
+
+        assertThat(requestMappings[1].methodName).isEqualTo("getPersonByFirstName")
+        assertThat(requestMappings[1].httpMethods).containsExactly(HttpMethod.GET)
+        assertThat(requestMappings[1].urlPattern.patternString).isEqualTo("/persons/{firstName}")
+        assertThat(requestMappings[1].consumes).containsExactly("*/*")
+        assertThat(requestMappings[1].produces).containsExactly("*/*")
+        assertThat(requestMappings[1].responseStatus).isEqualTo(HttpStatus.OK)
+        assertThat(requestMappings[1].pathVariables).hasSize(1)
+        assertThat(requestMappings[1].pathVariables[0].name).isEqualTo("firstName")
+        assertThat(requestMappings[1].pathVariables[0].type).isEqualTo("java.lang.String")
+        assertThat(requestMappings[1].pathVariables[0].required).isTrue
+    }
 
     @Test
     internal fun `should extract RequestMapping for GetMapping with RequestParam`() {

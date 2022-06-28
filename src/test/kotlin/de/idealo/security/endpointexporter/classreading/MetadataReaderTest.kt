@@ -8,44 +8,49 @@ import java.nio.file.Path
 
 internal class MetadataReaderTest {
 
-    // compiled version of https://github.com/DarkAtra/spring-security-demo/blob/c46c40d9d016945213fa60af13fe0ba0862d1fd7/src/main/java/de/darkatra/springsecuritydemo/HelloController.java
-    private val testControllerClass = Path.of("src/test/resources/classreading/HelloController.class")
+    /**
+     * @see de.idealo.security.endpointexporter.test.PersonController
+     */
+    private val testControllerClass = Path.of("target/test-classes/de/idealo/security/endpointexporter/test/PersonController.class")
 
     @Test
-    internal fun shouldReadClassMetadata() {
+    internal fun `should read class metadata`() {
 
         val metadataReader = MetadataReader(PathResource(testControllerClass))
 
         val classMetadata = metadataReader.classMetadata
 
         assertThat(classMetadata).isNotNull
-        assertThat(classMetadata.name).isEqualTo("de.darkatra.springsecuritydemo.HelloController")
+        assertThat(classMetadata.name).isEqualTo("de.idealo.security.endpointexporter.test.PersonController")
         assertThat(classMetadata.methods).hasSize(3)
 
-        // find the first method that is not a constructor or static initialization block
-        val methodMetadata = classMetadata.methods.first { it.name != "<init>" && it.name != "<cinit>" }
-        assertThat(methodMetadata.name).isEqualTo("hello")
-        assertThat(methodMetadata.visibility).isEqualTo(Visibility.PUBLIC)
-        assertThat(methodMetadata.getAnnotations()).hasSize(2)
-        assertThat(methodMetadata.parameters).hasSize(1)
+        // find all methods that are not constructors or static initialization blocks
+        val methods = classMetadata.methods.filter { it.name != "<init>" && it.name != "<cinit>" }
 
-        val firstMethodAnnotation = methodMetadata.getAnnotations()[0]
-        assertThat(firstMethodAnnotation.name).isEqualTo("org.springframework.web.bind.annotation.GetMapping")
-        assertThat(firstMethodAnnotation.attributes).hasSize(1)
-        assertThat(firstMethodAnnotation.getStringArray("value")).containsExactly("/hello")
+        val getPersonsMethod = methods.first()
+        assertThat(getPersonsMethod.name).isEqualTo("getPersons")
+        assertThat(getPersonsMethod.visibility).isEqualTo(Visibility.PUBLIC)
+        assertThat(getPersonsMethod.getAnnotations()).hasSize(1)
+        assertThat(getPersonsMethod.parameters).isEmpty()
 
-        val secondMethodAnnotation = methodMetadata.getAnnotations()[1]
-        assertThat(secondMethodAnnotation.name).isEqualTo("org.springframework.security.access.prepost.PreAuthorize")
-        assertThat(secondMethodAnnotation.attributes).hasSize(1)
-        assertThat(secondMethodAnnotation.getString("value")).isEqualTo("hasAuthority('SCOPE_SECURITY_DEMO:GET_HELLO')")
+        val getPersonsGetMappingAnnotation = getPersonsMethod.getAnnotations()[0]
+        assertThat(getPersonsGetMappingAnnotation.name).isEqualTo("org.springframework.web.bind.annotation.GetMapping")
+        assertThat(getPersonsGetMappingAnnotation.attributes).hasSize(1)
+        assertThat(getPersonsGetMappingAnnotation.getStringArray("value")).containsExactly("/persons")
 
-        val parameterMetadata = methodMetadata.parameters[0]
-        assertThat(parameterMetadata.name).isEqualTo("jwt")
-        assertThat(parameterMetadata.type).isEqualTo("org.springframework.security.oauth2.jwt.Jwt")
-        assertThat(parameterMetadata.getAnnotations()).hasSize(1)
+        val getPersonByFirstNameMethod = methods.last()
+        assertThat(getPersonByFirstNameMethod.name).isEqualTo("getPersonByFirstName")
+        assertThat(getPersonByFirstNameMethod.visibility).isEqualTo(Visibility.PUBLIC)
+        assertThat(getPersonByFirstNameMethod.getAnnotations()).hasSize(1)
+        assertThat(getPersonByFirstNameMethod.parameters).hasSize(1)
 
-        val parameterAnnotationMetadata = parameterMetadata.getAnnotations()[0]
-        assertThat(parameterAnnotationMetadata.name).isEqualTo("org.springframework.security.core.annotation.AuthenticationPrincipal")
-        assertThat(parameterAnnotationMetadata.attributes).isEmpty()
+        val getPersonByFirstNameParameter = getPersonByFirstNameMethod.parameters[0]
+        assertThat(getPersonByFirstNameParameter.name).isEqualTo("firstName")
+        assertThat(getPersonByFirstNameParameter.type).isEqualTo("java.lang.String")
+        assertThat(getPersonByFirstNameParameter.getAnnotations()).hasSize(1)
+
+        val getPersonByFirstNameParameterAnnotation = getPersonByFirstNameParameter.getAnnotations()[0]
+        assertThat(getPersonByFirstNameParameterAnnotation.name).isEqualTo("org.springframework.web.bind.annotation.PathVariable")
+        assertThat(getPersonByFirstNameParameterAnnotation.attributes).isEmpty()
     }
 }

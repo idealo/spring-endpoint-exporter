@@ -6,7 +6,6 @@ import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
-import org.springframework.http.MediaType
 import org.springframework.stereotype.Service
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -80,8 +79,8 @@ class RequestMappingProcessor(
                 requestParameters = methodMetadata?.let { requestParameterProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
                 requestHeaders = methodMetadata?.let { requestHeaderProcessor.process(it) } ?: emptyList(),
-                consumes = getMediaTypes(consumes),
-                produces = getMediaTypes(produces),
+                consumes = consumes.asList(),
+                produces = produces.asList(),
                 declaringClassName = classMetadata.name,
                 methodName = methodMetadata?.name
             )
@@ -110,11 +109,6 @@ class RequestMappingProcessor(
             DeleteMapping::class.qualifiedName!! -> HttpMethod.DELETE.name
             else -> null
         }
-    }
-
-    private fun getMediaTypes(consumes: Array<String>) = when {
-        consumes.isEmpty() -> listOf(MediaType.ALL_VALUE)
-        else -> consumes.asList()
     }
 
     private fun getFirstRequestMappingAnnotation(annotatedTypeMetadata: AnnotatedTypeMetadata): AnnotationMetadata? {
