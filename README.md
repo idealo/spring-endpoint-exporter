@@ -25,7 +25,7 @@ mvn clean package
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.2.1.jar
+java -jar ./target/spring-endpoint-exporter-0.2.9.jar
 ```
 
 ## Configuration Properties
@@ -41,13 +41,13 @@ You can pass properties to the application using environment variables or comman
 
 ```
 export EXPORTER_JAR_PATH=/data/app.jar
-java -jar ./target/spring-endpoint-exporter-0.2.1.jar
+java -jar ./target/spring-endpoint-exporter-0.2.9.jar
 ```
 
 or
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.2.1.jar --exporter.jar-path="/data/app.jar"
+java -jar ./target/spring-endpoint-exporter-0.2.9.jar --exporter.jar-path="/data/app.jar"
 ```
 
 ## Known limitations
