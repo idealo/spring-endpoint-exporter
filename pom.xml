@@ -35,7 +35,7 @@
         <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}</image.name>
 
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.7.10</kotlin.version>
+        <kotlin.version>1.7.20</kotlin.version>
         <java.version>11</java.version>
 
         <asm.version>9.3</asm.version>
