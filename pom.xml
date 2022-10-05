@@ -38,7 +38,7 @@
         <kotlin.version>1.7.20</kotlin.version>
         <java.version>11</java.version>
 
-        <asm.version>9.3</asm.version>
+        <asm.version>9.4</asm.version>
         <swagger.version>2.2.3</swagger.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     </properties>
