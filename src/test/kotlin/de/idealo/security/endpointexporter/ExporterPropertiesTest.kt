@@ -1,10 +1,10 @@
 package de.idealo.security.endpointexporter
 
+import jakarta.validation.Validation
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import java.nio.file.Path
 import java.util.regex.Pattern
-import javax.validation.Validation
 
 internal class ExporterPropertiesTest {
 

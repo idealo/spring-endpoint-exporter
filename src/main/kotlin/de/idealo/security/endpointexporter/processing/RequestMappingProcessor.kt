@@ -7,11 +7,7 @@ import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.stereotype.Service
-import org.springframework.web.bind.annotation.DeleteMapping
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PatchMapping
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.util.pattern.PathPatternParser
 import org.springframework.web.bind.annotation.RequestMapping as RequestMappingAnnotation
 
@@ -74,7 +70,7 @@ class RequestMappingProcessor(
         return urlPatterns.map { urlPattern ->
             RequestMapping(
                 urlPattern = patternParser.parse(urlPattern),
-                httpMethods = httpMethods.mapNotNull { HttpMethod.resolve(it) }.toSet(),
+                httpMethods = httpMethods.filterNotNull().map { HttpMethod.valueOf(it) }.toSet(),
                 responseStatus = methodMetadata?.let { responseStatusProcessor.process(it) } ?: HttpStatus.OK,
                 requestParameters = methodMetadata?.let { requestParameterProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
@@ -102,11 +98,11 @@ class RequestMappingProcessor(
 
     private fun getDefaultHttpMethodForRequestMappingAnnotation(annotationMetadata: AnnotationMetadata): String? {
         return when (annotationMetadata.name) {
-            GetMapping::class.qualifiedName!! -> HttpMethod.GET.name
-            PostMapping::class.qualifiedName!! -> HttpMethod.POST.name
-            PutMapping::class.qualifiedName!! -> HttpMethod.PUT.name
-            PatchMapping::class.qualifiedName!! -> HttpMethod.PATCH.name
-            DeleteMapping::class.qualifiedName!! -> HttpMethod.DELETE.name
+            GetMapping::class.qualifiedName!! -> HttpMethod.GET.name()
+            PostMapping::class.qualifiedName!! -> HttpMethod.POST.name()
+            PutMapping::class.qualifiedName!! -> HttpMethod.PUT.name()
+            PatchMapping::class.qualifiedName!! -> HttpMethod.PATCH.name()
+            DeleteMapping::class.qualifiedName!! -> HttpMethod.DELETE.name()
             else -> null
         }
     }
