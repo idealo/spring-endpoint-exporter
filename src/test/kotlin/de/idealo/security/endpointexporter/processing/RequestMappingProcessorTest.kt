@@ -14,7 +14,6 @@ import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.util.pattern.PathPatternParser
 import java.nio.file.Path
 import java.util.stream.Stream
 
@@ -29,8 +28,7 @@ internal class RequestMappingProcessorTest {
         requestParameterProcessor = RequestParameterProcessor(),
         pathVariableProcessor = PathVariableProcessor(),
         requestHeaderProcessor = RequestHeaderProcessor(),
-        responseStatusProcessor = ResponseStatusProcessor(),
-        patternParser = PathPatternParser()
+        responseStatusProcessor = ResponseStatusProcessor()
     )
 
     @Test

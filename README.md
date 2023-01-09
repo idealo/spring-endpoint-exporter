@@ -47,7 +47,7 @@ java -jar ./target/spring-endpoint-exporter-0.2.14.jar
 or
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.2.14.jar --exporter.jar-path="/data/app.jar"
+java -jar ./target/spring-endpoint-exporter-0.2.14.jar --exporter.jar-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
 ```
 
 ## Known limitations
