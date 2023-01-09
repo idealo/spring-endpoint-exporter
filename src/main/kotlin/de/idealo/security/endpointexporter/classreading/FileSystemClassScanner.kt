@@ -22,7 +22,7 @@ class FileSystemClassScanner(
 
         // pattern to find all class files in a directory
         // note: Path.resolve with wildcards (aka. *) does not work on windows
-        val resourcePattern = entrypoint.normalize().pathString + "/**/*.class"
+        val resourcePattern = "file:${entrypoint.normalize().pathString}/**/*.class"
 
         // get the resources
         return resourcePatternResolver.getResources(resourcePattern)

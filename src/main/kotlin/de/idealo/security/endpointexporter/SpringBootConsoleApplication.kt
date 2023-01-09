@@ -2,6 +2,7 @@ package de.idealo.security.endpointexporter
 
 import de.idealo.security.endpointexporter.classreading.JarClassScanner
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.export.ExportRuntimeHintsRegistrar
 import de.idealo.security.endpointexporter.export.ExportService
 import de.idealo.security.endpointexporter.processing.RequestMappingProcessor
 import org.springframework.boot.ApplicationArguments
@@ -9,18 +10,22 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ImportRuntimeHints
 
 fun main(args: Array<String>) {
     runApplication<SpringBootConsoleApplication>(*args)
 }
 
 @SpringBootApplication
+@ImportRuntimeHints(ExportRuntimeHintsRegistrar::class)
 @EnableConfigurationProperties(ExporterProperties::class)
 class SpringBootConsoleApplication(
     private val requestMappingProcessor: RequestMappingProcessor,
     private val exportService: ExportService,
     private val exporterProperties: ExporterProperties
 ) : ApplicationRunner {
+
+    companion object : LoggingAware()
 
     override fun run(args: ApplicationArguments) {
 
@@ -32,10 +37,15 @@ class SpringBootConsoleApplication(
         val applicationData = scanner.scanApplicationData(exporterProperties.jarPath)
 
         val scanResult = scanner.scan(exporterProperties.jarPath)
+
+        log.info("Processing ${scanResult.size} classes...")
+
         val classToRequestMappings = scanResult.associateBy(
             ClassMetadata::name,
             requestMappingProcessor::process
         )
+
+        log.info("Found ${classToRequestMappings.values.flatten().count()} RequestMappings.")
 
         exportService.writeAsOpenAPIDefinitions(applicationData, classToRequestMappings, exporterProperties.outputPath)
     }
