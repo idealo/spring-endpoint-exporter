@@ -14,7 +14,32 @@ applies [Spring Boot](https://github.com/spring-projects/spring-boot) specific r
 into [OpenAPI 3 format](https://swagger.io/docs/specification/about/) and written to a file. This file can now be used, for example
 with [ZAP](https://github.com/zaproxy/zaproxy), to dynamically scan an application for security issues.
 
-## Building
+## Configuration Properties
+
+| Property                   | Type           | Description                                                                                                                                                                                                                     | Default value       |
+|----------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| `exporter.scan-mode`       | `ScanMode`     | The mode the exporter will operate in. Either `JAR` or `FILE_SYSTEM`.<br/><br/> `JAR` mode expects input-path to point to a valid jar. `FILE_SYSTEM` expects input-path to point the a directory that contains `*.class` files. | `"JAR"`             |
+| `exporter.input-path`      | `Path`         | The jar or directory with class files to scan and export all request mappings from.                                                                                                                                             | `null`              |
+| `exporter.output-path`     | `Path`         | Where to output the result of the exporter.                                                                                                                                                                                     | `"./open-api.json"` |
+| `exporter.include-filters` | `Set<Pattern>` | A set of packages to include when scanning for request mappings.                                                                                                                                                                | `null`              |
+| `exporter.exclude-filters` | `Set<Pattern>` | A set of packages to exclude when scanning for request mappings.                                                                                                                                                                | `null`              |
+
+You can pass properties to the application using environment variables or command line arguments. E.g.:
+
+```
+export EXPORTER_INPUT_PATH=/data/app.jar
+java -jar ./spring-endpoint-exporter-1.0.0.jar
+```
+
+or
+
+```
+java -jar ./spring-endpoint-exporter-1.0.0.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+```
+
+## Building from source
+
+### Jar File
 
 Simply run the following command:
 
@@ -25,31 +50,32 @@ mvn clean package
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.2.14.jar
+java -jar ./target/spring-endpoint-exporter-1.0.0.jar
 ```
 
-## Configuration Properties
+### Docker Image
 
-| Property                   | Type           | Description                                                                                                                                                                                                                     | Default value       |
-|----------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
-| `exporter.scan-mode`       | `ScanMode`     | The mode the exporter will operate in. Either `JAR` or `FILE_SYSTEM`.<br/><br/> `JAR` mode expects input-path to point to a valid jar. `FILE_SYSTEM` expects input-path to point the a directory that contains `*.class` files. | `JAR`               |
-| `exporter.input-path`      | `Path`         | The jar or directory with class files to scan and export all request mappings from.                                                                                                                                             | `null`              |
-| `exporter.output-path`     | `Path`         | Where to output the result of the exporter.                                                                                                                                                                                     | `"./open-api.json"` |
-| `exporter.include-filters` | `Set<Pattern>` | A set of packages to include when scanning for request mappings.                                                                                                                                                                | `null`              |
-| `exporter.exclude-filters` | `Set<Pattern>` | A set of packages to exclude when scanning for request mappings.                                                                                                                                                                | `null`              |
-
-You can pass properties to the application using environment variables or command line arguments. E.g.:
+Make sure your docker daemon is running and run the following command:
 
 ```
-export EXPORTER_INPUT_PATH=/data/app.jar
-java -jar ./target/spring-endpoint-exporter-0.2.14.jar
+mvn clean spring-boot:build-image
 ```
 
-or
+The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0`.
+
+### Native Docker Image (Beta)
+
+Make sure your docker daemon is running and run the following command:
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.2.14.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+mvn -Pnative clean spring-boot:build-image
 ```
+
+The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0-native`.
+
+| :warning: WARNING                                                                                                                               |
+|:------------------------------------------------------------------------------------------------------------------------------------------------|
+| Native images are still in beta and are expected to have some bugs. For example, only the `FILE_SYSTEM` scan mode is supported as of right now. |
 
 ## Known limitations
 
