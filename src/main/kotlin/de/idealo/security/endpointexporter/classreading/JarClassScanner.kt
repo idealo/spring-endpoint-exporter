@@ -4,7 +4,6 @@ import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.springframework.core.io.DefaultResourceLoader
 import java.nio.file.Path
-import java.util.Properties
 import java.util.regex.Pattern
 
 class JarClassScanner(
@@ -33,25 +32,6 @@ class JarClassScanner(
     }
 
     override fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
-
-        val resourcePattern = "jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/META-INF/MANIFEST.MF"
-        val resource = resourcePatternResolver.getResource(resourcePattern)
-
-        return when {
-            resource.exists() -> {
-                val properties = resource.inputStream.use { stream ->
-                    Properties().also { it.load(stream) }
-                }
-                ApplicationMetadata(
-                    title = properties.getProperty("Implementation-Title") ?: "n/a",
-                    version = properties.getProperty("Implementation-Version") ?: "n/a",
-                )
-            }
-
-            else -> ApplicationMetadata(
-                title = "n/a",
-                version = "n/a"
-            )
-        }
+        return loadApplicationDataFromManifest("jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/META-INF/MANIFEST.MF")
     }
 }

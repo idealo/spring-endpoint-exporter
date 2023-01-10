@@ -33,5 +33,7 @@ class FileSystemClassScanner(
             .filter(this::isCandidate)
     }
 
-    override fun scanApplicationData(entrypoint: Path): ApplicationMetadata? = null
+    override fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
+        return loadApplicationDataFromManifest("file:${entrypoint.normalize().pathString}/META-INF/MANIFEST.MF")
+    }
 }
