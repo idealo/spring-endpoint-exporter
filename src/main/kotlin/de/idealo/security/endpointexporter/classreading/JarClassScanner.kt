@@ -32,7 +32,7 @@ class JarClassScanner(
             .filter(this::isCandidate)
     }
 
-    fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
+    override fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
 
         val resourcePattern = "jar:${entrypoint.normalize().toUri().toURL().toExternalForm()}!/META-INF/MANIFEST.MF"
         val resource = resourcePatternResolver.getResource(resourcePattern)
@@ -47,6 +47,7 @@ class JarClassScanner(
                     version = properties.getProperty("Implementation-Version") ?: "n/a",
                 )
             }
+
             else -> ApplicationMetadata(
                 title = "n/a",
                 version = "n/a"

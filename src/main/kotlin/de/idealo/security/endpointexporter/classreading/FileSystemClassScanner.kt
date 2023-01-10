@@ -1,5 +1,6 @@
 package de.idealo.security.endpointexporter.classreading
 
+import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.springframework.core.io.FileSystemResourceLoader
 import java.nio.file.Path
@@ -31,4 +32,6 @@ class FileSystemClassScanner(
             // apply all include and exclude filters
             .filter(this::isCandidate)
     }
+
+    override fun scanApplicationData(entrypoint: Path): ApplicationMetadata? = null
 }

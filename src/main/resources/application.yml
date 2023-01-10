@@ -5,7 +5,8 @@ spring:
     default-property-inclusion: non_empty
 
 exporter:
-  jar-path: ~
+  scan-mode: JAR
+  input-path: ~
   output-path: ./open-api.json
   include-filters: ~
   exclude-filters: ~

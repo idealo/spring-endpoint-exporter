@@ -12,7 +12,10 @@ import java.util.regex.Pattern
 class ExporterProperties {
 
     @field:NotNull
-    lateinit var jarPath: Path
+    lateinit var scanMode: ScanMode
+
+    @field:NotNull
+    lateinit var inputPath: Path
 
     @field:NotNull
     lateinit var outputPath: Path
@@ -21,4 +24,9 @@ class ExporterProperties {
     lateinit var includeFilters: Set<@NotNull Pattern>
 
     lateinit var excludeFilters: Set<@NotNull Pattern>
+
+    enum class ScanMode {
+        JAR,
+        FILE_SYSTEM
+    }
 }

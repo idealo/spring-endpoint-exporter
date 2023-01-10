@@ -30,24 +30,25 @@ java -jar ./target/spring-endpoint-exporter-0.2.14.jar
 
 ## Configuration Properties
 
-| Property                   | Type           | Description                                                     | Default value       |
-|----------------------------|----------------|-----------------------------------------------------------------|---------------------|
-| `exporter.jar-path`        | `Path`         | The jar to export all request mappings from                     | `null`              |
-| `exporter.output-path`     | `Path`         | Where to output the result of the exporter                      | `"./open-api.json"` |
-| `exporter.include-filters` | `Set<Pattern>` | A set of packages to include when scanning for request mappings | `null`              |
-| `exporter.exclude-filters` | `Set<Pattern>` | A set of packages to exclude when scanning for request mappings | `null`              |
+| Property                   | Type           | Description                                                                                                                                                                                                                     | Default value       |
+|----------------------------|----------------|---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|---------------------|
+| `exporter.scan-mode`       | `ScanMode`     | The mode the exporter will operate in. Either `JAR` or `FILE_SYSTEM`.<br/><br/> `JAR` mode expects input-path to point to a valid jar. `FILE_SYSTEM` expects input-path to point the a directory that contains `*.class` files. | `JAR`               |
+| `exporter.input-path`      | `Path`         | The jar or directory with class files to scan and export all request mappings from.                                                                                                                                             | `null`              |
+| `exporter.output-path`     | `Path`         | Where to output the result of the exporter.                                                                                                                                                                                     | `"./open-api.json"` |
+| `exporter.include-filters` | `Set<Pattern>` | A set of packages to include when scanning for request mappings.                                                                                                                                                                | `null`              |
+| `exporter.exclude-filters` | `Set<Pattern>` | A set of packages to exclude when scanning for request mappings.                                                                                                                                                                | `null`              |
 
 You can pass properties to the application using environment variables or command line arguments. E.g.:
 
 ```
-export EXPORTER_JAR_PATH=/data/app.jar
+export EXPORTER_INPUT_PATH=/data/app.jar
 java -jar ./target/spring-endpoint-exporter-0.2.14.jar
 ```
 
 or
 
 ```
-java -jar ./target/spring-endpoint-exporter-0.2.14.jar --exporter.jar-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+java -jar ./target/spring-endpoint-exporter-0.2.14.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
 ```
 
 ## Known limitations
