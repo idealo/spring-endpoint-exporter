@@ -1,5 +1,8 @@
 package de.idealo.security.endpointexporter.export
 
+import io.swagger.v3.core.jackson.ApiResponsesSerializer
+import io.swagger.v3.core.jackson.CallbackSerializer
+import io.swagger.v3.core.jackson.mixin.OperationMixin
 import io.swagger.v3.oas.models.OpenAPI
 import io.swagger.v3.oas.models.Operation
 import io.swagger.v3.oas.models.PathItem
@@ -21,6 +24,9 @@ class ExportRuntimeHintsRegistrar : RuntimeHintsRegistrar {
             .registerType(Info::class.java, *jacksonMemberCategories)
             .registerType(PathItem::class.java, *jacksonMemberCategories)
             .registerType(Operation::class.java, *jacksonMemberCategories)
+            .registerType(OperationMixin::class.java, *jacksonMemberCategories)
+            .registerType(CallbackSerializer::class.java, MemberCategory.INTROSPECT_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
+            .registerType(ApiResponsesSerializer::class.java, MemberCategory.INTROSPECT_PUBLIC_CONSTRUCTORS, MemberCategory.INVOKE_PUBLIC_CONSTRUCTORS)
             .registerType(Parameter::class.java, *jacksonMemberCategories)
             .registerType(Schema::class.java, *jacksonMemberCategories)
             .registerType(ApiResponse::class.java, *jacksonMemberCategories)
