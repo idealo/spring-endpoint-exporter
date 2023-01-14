@@ -39,7 +39,7 @@
         <java.version>17</java.version>
 
         <asm.version>9.4</asm.version>
-        <swagger.version>2.2.8</swagger.version>
+        <springdoc-openapi.version>2.0.2</springdoc-openapi.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     </properties>
 
@@ -77,14 +77,9 @@
 
         <!-- Open API 3 -->
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-core</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
 
         <dependency>
