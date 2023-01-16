@@ -1,8 +1,7 @@
 spring:
   main:
     web-application-type: none
-  jackson:
-    default-property-inclusion: non_empty
+    banner-mode: off
 
 exporter:
   scan-mode: JAR

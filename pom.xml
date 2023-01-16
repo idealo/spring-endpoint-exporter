@@ -192,9 +192,6 @@
                         <configuration>
                             <image>
                                 <publish>true</publish>
-                                <env>
-                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
-                                </env>
                             </image>
                             <docker>
                                 <publishRegistry>
@@ -218,6 +215,17 @@
                     <plugin>
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <image>
+                                <env>
+                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                                </env>
+                            </image>
+                        </configuration>
                     </plugin>
                 </plugins>
             </build>

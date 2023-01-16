@@ -71,7 +71,7 @@ Make sure your docker daemon is running and run the following command:
 mvn -Pnative clean spring-boot:build-image
 ```
 
-The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0-native`.
+The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0-native`.
 
 ## Known limitations
 

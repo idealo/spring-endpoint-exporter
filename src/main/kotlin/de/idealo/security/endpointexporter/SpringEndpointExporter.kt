@@ -44,7 +44,7 @@ class SpringBootConsoleApplication(
 
         val scanResult = scanner.scan(exporterProperties.inputPath)
 
-        log.info("Processing ${scanResult.size} classes...")
+        log.info("Processing ${scanResult.size} classes using ${scanner.javaClass.simpleName}...")
 
         val classToRequestMappings = scanResult.associateBy(
             ClassMetadata::name,
