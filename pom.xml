@@ -192,6 +192,9 @@
                         <configuration>
                             <image>
                                 <publish>true</publish>
+                                <env>
+                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                                </env>
                             </image>
                             <docker>
                                 <publishRegistry>

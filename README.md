@@ -73,10 +73,6 @@ mvn -Pnative clean spring-boot:build-image
 
 The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0-native`.
 
-| :warning: WARNING                                                                                                                               |
-|:------------------------------------------------------------------------------------------------------------------------------------------------|
-| Native images are still in beta and are expected to have some bugs. For example, only the `FILE_SYSTEM` scan mode is supported as of right now. |
-
 ## Known limitations
 
 Since this tool only accesses information from the bytecode, and thus does not load classes, it does not pick up custom `@RequestMapping` annotations, e.g.:
