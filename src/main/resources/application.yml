@@ -1,11 +1,11 @@
 spring:
   main:
     web-application-type: none
-  jackson:
-    default-property-inclusion: non_empty
+    banner-mode: off
 
 exporter:
-  jar-path: ~
+  scan-mode: JAR
+  input-path: ~
   output-path: ./open-api.json
   include-filters: ~
   exclude-filters: ~

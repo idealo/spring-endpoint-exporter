@@ -21,9 +21,9 @@ class RequestMappingProcessor(
     private val pathVariableProcessor: PathVariableProcessor,
     private val requestHeaderProcessor: RequestHeaderProcessor,
     private val responseStatusProcessor: ResponseStatusProcessor,
-    private val patternParser: PathPatternParser = PathPatternParser()
 ) : MetadataProcessor<ClassMetadata, List<RequestMapping>> {
 
+    private val patternParser: PathPatternParser = PathPatternParser()
     private val requestMappingAnnotations = listOf(
         RequestMappingAnnotation::class.qualifiedName!!,
         GetMapping::class.qualifiedName!!,
@@ -74,7 +74,7 @@ class RequestMappingProcessor(
         return urlPatterns.map { urlPattern ->
             RequestMapping(
                 urlPattern = patternParser.parse(urlPattern),
-                httpMethods = httpMethods.mapNotNull { HttpMethod.resolve(it) }.toSet(),
+                httpMethods = httpMethods.filterNotNull().map { HttpMethod.valueOf(it) }.toSet(),
                 responseStatus = methodMetadata?.let { responseStatusProcessor.process(it) } ?: HttpStatus.OK,
                 requestParameters = methodMetadata?.let { requestParameterProcessor.process(it) } ?: emptyList(),
                 pathVariables = methodMetadata?.let { pathVariableProcessor.process(it) } ?: emptyList(),
@@ -102,11 +102,11 @@ class RequestMappingProcessor(
 
     private fun getDefaultHttpMethodForRequestMappingAnnotation(annotationMetadata: AnnotationMetadata): String? {
         return when (annotationMetadata.name) {
-            GetMapping::class.qualifiedName!! -> HttpMethod.GET.name
-            PostMapping::class.qualifiedName!! -> HttpMethod.POST.name
-            PutMapping::class.qualifiedName!! -> HttpMethod.PUT.name
-            PatchMapping::class.qualifiedName!! -> HttpMethod.PATCH.name
-            DeleteMapping::class.qualifiedName!! -> HttpMethod.DELETE.name
+            GetMapping::class.qualifiedName!! -> HttpMethod.GET.name()
+            PostMapping::class.qualifiedName!! -> HttpMethod.POST.name()
+            PutMapping::class.qualifiedName!! -> HttpMethod.PUT.name()
+            PatchMapping::class.qualifiedName!! -> HttpMethod.PATCH.name()
+            DeleteMapping::class.qualifiedName!! -> HttpMethod.DELETE.name()
             else -> null
         }
     }

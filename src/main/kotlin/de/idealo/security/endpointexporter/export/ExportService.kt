@@ -27,7 +27,7 @@ import kotlin.io.path.bufferedWriter
 class ExportService {
 
     fun writeAsOpenAPIDefinitions(
-        applicationMetadata: ApplicationMetadata,
+        applicationMetadata: ApplicationMetadata?,
         classToRequestMappings: Map<String, List<RequestMapping>>,
         outputPath: Path
     ) {
@@ -94,17 +94,17 @@ class ExportService {
             }
         }
 
-        outputPath.bufferedWriter().use { writer ->
-            Json.pretty().writeValue(
-                writer,
-                OpenAPI()
-                    .info(
-                        Info()
-                            .title("Export for ${applicationMetadata.title}")
-                            .version(applicationMetadata.version)
-                    )
-                    .paths(paths)
+        val openAPI = OpenAPI().paths(paths)
+        if (applicationMetadata != null) {
+            openAPI.info(
+                Info()
+                    .title(applicationMetadata.title)
+                    .version(applicationMetadata.version)
             )
+        }
+
+        outputPath.bufferedWriter().use { writer ->
+            Json.pretty().writeValue(writer, openAPI)
         }
     }
 
@@ -139,6 +139,7 @@ class ExportService {
             HttpMethod.HEAD -> PathItem::head
             HttpMethod.TRACE -> PathItem::trace
             HttpMethod.OPTIONS -> PathItem::options
+            else -> throw IllegalStateException("Could not map unsupported HttpMethod '${httpMethod.name()}'.")
         }
     }
 }

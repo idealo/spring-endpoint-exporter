@@ -1,20 +1,21 @@
 package de.idealo.security.endpointexporter
 
+import jakarta.validation.constraints.NotEmpty
+import jakarta.validation.constraints.NotNull
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.springframework.boot.context.properties.ConstructorBinding
 import org.springframework.validation.annotation.Validated
 import java.nio.file.Path
 import java.util.regex.Pattern
-import javax.validation.constraints.NotEmpty
-import javax.validation.constraints.NotNull
 
 @Validated
-@ConstructorBinding
 @ConfigurationProperties("exporter")
 class ExporterProperties {
 
     @field:NotNull
-    lateinit var jarPath: Path
+    lateinit var scanMode: ScanMode
+
+    @field:NotNull
+    lateinit var inputPath: Path
 
     @field:NotNull
     lateinit var outputPath: Path
@@ -23,4 +24,9 @@ class ExporterProperties {
     lateinit var includeFilters: Set<@NotNull Pattern>
 
     lateinit var excludeFilters: Set<@NotNull Pattern>
+
+    enum class ScanMode {
+        JAR,
+        FILE_SYSTEM
+    }
 }

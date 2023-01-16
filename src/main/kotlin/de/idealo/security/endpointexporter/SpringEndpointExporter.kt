@@ -1,5 +1,7 @@
 package de.idealo.security.endpointexporter
 
+import de.idealo.security.endpointexporter.ExporterProperties.ScanMode
+import de.idealo.security.endpointexporter.classreading.FileSystemClassScanner
 import de.idealo.security.endpointexporter.classreading.JarClassScanner
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import de.idealo.security.endpointexporter.export.ExportService
@@ -22,20 +24,34 @@ class SpringBootConsoleApplication(
     private val exporterProperties: ExporterProperties
 ) : ApplicationRunner {
 
+    companion object : LoggingAware()
+
     override fun run(args: ApplicationArguments) {
 
-        val scanner = JarClassScanner(
-            includeFilters = exporterProperties.includeFilters,
-            excludeFilters = exporterProperties.excludeFilters
-        )
+        val scanner = when (exporterProperties.scanMode) {
+            ScanMode.JAR -> JarClassScanner(
+                includeFilters = exporterProperties.includeFilters,
+                excludeFilters = exporterProperties.excludeFilters
+            )
 
-        val applicationData = scanner.scanApplicationData(exporterProperties.jarPath)
+            ScanMode.FILE_SYSTEM -> FileSystemClassScanner(
+                includeFilters = exporterProperties.includeFilters,
+                excludeFilters = exporterProperties.excludeFilters
+            )
+        }
 
-        val scanResult = scanner.scan(exporterProperties.jarPath)
+        val applicationData = scanner.scanApplicationData(exporterProperties.inputPath)
+
+        val scanResult = scanner.scan(exporterProperties.inputPath)
+
+        log.info("Processing ${scanResult.size} classes using ${scanner.javaClass.simpleName}...")
+
         val classToRequestMappings = scanResult.associateBy(
             ClassMetadata::name,
             requestMappingProcessor::process
         )
+
+        log.info("Found ${classToRequestMappings.values.flatten().count()} RequestMappings.")
 
         exportService.writeAsOpenAPIDefinitions(applicationData, classToRequestMappings, exporterProperties.outputPath)
     }

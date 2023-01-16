@@ -1,5 +1,6 @@
 package de.idealo.security.endpointexporter.classreading
 
+import de.idealo.security.endpointexporter.classreading.type.ApplicationMetadata
 import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
 import org.springframework.core.io.FileSystemResourceLoader
 import java.nio.file.Path
@@ -22,7 +23,7 @@ class FileSystemClassScanner(
 
         // pattern to find all class files in a directory
         // note: Path.resolve with wildcards (aka. *) does not work on windows
-        val resourcePattern = entrypoint.normalize().pathString + "/**/*.class"
+        val resourcePattern = "file:${entrypoint.normalize().pathString}/**/*.class"
 
         // get the resources
         return resourcePatternResolver.getResources(resourcePattern)
@@ -30,5 +31,9 @@ class FileSystemClassScanner(
             .map { resource -> MetadataReader(resource).classMetadata }
             // apply all include and exclude filters
             .filter(this::isCandidate)
+    }
+
+    override fun scanApplicationData(entrypoint: Path): ApplicationMetadata {
+        return loadApplicationDataFromManifest("file:${entrypoint.normalize().pathString}/META-INF/MANIFEST.MF")
     }
 }

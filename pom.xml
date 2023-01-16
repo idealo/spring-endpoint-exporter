@@ -7,13 +7,13 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.7.5</version>
+        <version>3.0.1</version>
         <relativePath/>
     </parent>
 
     <groupId>de.idealo.security</groupId>
     <artifactId>spring-endpoint-exporter</artifactId>
-    <version>0.2.16</version>
+    <version>1.0.0-next.3</version>
 
     <licenses>
         <license>
@@ -35,11 +35,11 @@
         <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}</image.name>
 
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.7.22</kotlin.version>
-        <java.version>11</java.version>
+        <kotlin.version>1.8.0</kotlin.version>
+        <java.version>17</java.version>
 
         <asm.version>9.4</asm.version>
-        <swagger.version>2.2.7</swagger.version>
+        <springdoc-openapi.version>2.0.2</springdoc-openapi.version>
         <jacoco-maven-plugin.version>0.8.8</jacoco-maven-plugin.version>
     </properties>
 
@@ -77,14 +77,9 @@
 
         <!-- Open API 3 -->
         <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-core</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.swagger.core.v3</groupId>
-            <artifactId>swagger-models</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-common</artifactId>
+            <version>${springdoc-openapi.version}</version>
         </dependency>
 
         <dependency>
@@ -103,20 +98,8 @@
     <build>
         <sourceDirectory>src/main/kotlin</sourceDirectory>
         <testSourceDirectory>src/test/kotlin</testSourceDirectory>
+
         <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <image>
-                        <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder:tiny</builder>
-                        <env>
-                            <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
-                        </env>
-                    </image>
-                </configuration>
-            </plugin>
             <plugin>
                 <groupId>org.jetbrains.kotlin</groupId>
                 <artifactId>kotlin-maven-plugin</artifactId>
@@ -135,6 +118,19 @@
                         <version>${kotlin.version}</version>
                     </dependency>
                 </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <image>
+                        <name>${image.name}</name>
+                        <builder>paketobuildpacks/builder:tiny</builder>
+                        <env>
+                            <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
+                        </env>
+                    </image>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -204,6 +200,31 @@
                                     <password>${env.GITHUB_TOKEN}</password>
                                 </publishRegistry>
                             </docker>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>native</id>
+            <properties>
+                <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}-native</image.name>
+            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <image>
+                                <env>
+                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                                </env>
+                            </image>
                         </configuration>
                     </plugin>
                 </plugins>

@@ -1,11 +1,7 @@
 package de.idealo.security.endpointexporter.processing
 
 import de.idealo.security.endpointexporter.classreading.MetadataReader
-import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
-import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
-import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
-import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
-import de.idealo.security.endpointexporter.classreading.type.Visibility
+import de.idealo.security.endpointexporter.classreading.type.*
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -16,13 +12,8 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.PutMapping
+import org.springframework.web.bind.annotation.*
 import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.ResponseStatus
-import org.springframework.web.util.pattern.PathPatternParser
 import java.nio.file.Path
 import java.util.stream.Stream
 
@@ -37,8 +28,7 @@ internal class RequestMappingProcessorTest {
         requestParameterProcessor = RequestParameterProcessor(),
         pathVariableProcessor = PathVariableProcessor(),
         requestHeaderProcessor = RequestHeaderProcessor(),
-        responseStatusProcessor = ResponseStatusProcessor(),
-        patternParser = PathPatternParser()
+        responseStatusProcessor = ResponseStatusProcessor()
     )
 
     @Test
@@ -113,7 +103,7 @@ internal class RequestMappingProcessorTest {
                             name = RequestMapping::class.qualifiedName!!,
                             attributes = mapOf(
                                 "value" to arrayOf("/{testParameter}"),
-                                "method" to arrayOf(HttpMethod.GET.name)
+                                "method" to arrayOf(HttpMethod.GET.name())
                             ),
                             annotations = emptyList()
                         )
