@@ -11,6 +11,7 @@ import org.springframework.boot.ApplicationRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.context.properties.EnableConfigurationProperties
 import org.springframework.boot.runApplication
+import org.springframework.context.annotation.ImportRuntimeHints
 
 fun main(args: Array<String>) {
     runApplication<SpringBootConsoleApplication>(*args)
@@ -18,6 +19,7 @@ fun main(args: Array<String>) {
 
 @SpringBootApplication
 @EnableConfigurationProperties(ExporterProperties::class)
+@ImportRuntimeHints(ExporterPropertiesRuntimeHints::class)
 class SpringBootConsoleApplication(
     private val requestMappingProcessor: RequestMappingProcessor,
     private val exportService: ExportService,
