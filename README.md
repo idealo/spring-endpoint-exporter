@@ -14,6 +14,35 @@ applies [Spring Boot](https://github.com/spring-projects/spring-boot) specific r
 into [OpenAPI 3 format](https://swagger.io/docs/specification/about/) and written to a file. This file can now be used, for example
 with [ZAP](https://github.com/zaproxy/zaproxy), to dynamically scan an application for security issues.
 
+## How to run it using docker-compose
+
+Find the latest docker image [here](https://github.com/idealo/spring-endpoint-exporter/pkgs/container/spring-endpoint-exporter).
+
+```yaml
+services:
+  spring-endpoint-exporter:
+    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.4
+    mem_reservation: 256M
+    mem_limit: 512M
+    volumes:
+      - /path/to/your/jar:/data
+    environment:
+      - EXPORTER_INCLUDE_FILTERS=de.idealo.*
+      - EXPORTER_INPUT_PATH=/data/app.jar
+      - EXPORTER_OUTPUT_PATH=/data/out.json
+```
+
+The above configuration would extract all spring endpoints inside the `de.idealo` package for `/path/to/your/jar/app.jar`
+to `/path/to/your/jar/out.json`.
+
+Please note that the container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this case `/path/to/your/jar`.
+
+### Native Docker Image (Beta)
+
+The Spring Endpoint Exporter is also available as a native executable built with GraalVM Native Image. The native executable should behave exactly the same as
+the JVM version but requires less memory and is overall faster. Please [file a new issue](https://github.com/idealo/spring-endpoint-exporter/issues/new/choose)
+if you notice any differences.
+
 ## Configuration Properties
 
 | Property                   | Type           | Description                                                                                                                                                                                                                     | Default value       |
@@ -28,13 +57,13 @@ You can pass properties to the application using environment variables or comman
 
 ```
 export EXPORTER_INPUT_PATH=/data/app.jar
-java -jar ./spring-endpoint-exporter-1.0.0.jar
+java -jar ./spring-endpoint-exporter-1.0.4.jar
 ```
 
 or
 
 ```
-java -jar ./spring-endpoint-exporter-1.0.0.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+java -jar ./spring-endpoint-exporter-1.0.4.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
 ```
 
 ## Building from source
@@ -50,7 +79,7 @@ mvn clean package
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-1.0.0.jar
+java -jar ./target/spring-endpoint-exporter-1.0.4.jar
 ```
 
 ### Docker Image
@@ -61,7 +90,7 @@ Make sure your docker daemon is running and run the following command:
 mvn clean spring-boot:build-image
 ```
 
-The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0`.
+The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4`.
 
 ### Native Docker Image (Beta)
 
@@ -71,7 +100,7 @@ Make sure your docker daemon is running and run the following command:
 mvn -Pnative clean spring-boot:build-image
 ```
 
-The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.0-native`.
+The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4-native`.
 
 ## Known limitations
 
@@ -85,26 +114,26 @@ Since this tool only accesses information from the bytecode, and thus does not l
 @RequestMapping(method = RequestMethod.GET)
 public @interface CustomRequestMapping {
 
-    @AliasFor(annotation = RequestMapping.class)
-    String name() default "";
+  @AliasFor(annotation = RequestMapping.class)
+  String name() default "";
 
-    @AliasFor(annotation = RequestMapping.class)
-    String[] value() default {};
+  @AliasFor(annotation = RequestMapping.class)
+  String[] value() default {};
 
-    @AliasFor(annotation = RequestMapping.class)
-    String[] path() default {};
+  @AliasFor(annotation = RequestMapping.class)
+  String[] path() default {};
 
-    @AliasFor(annotation = RequestMapping.class)
-    String[] params() default {};
+  @AliasFor(annotation = RequestMapping.class)
+  String[] params() default {};
 
-    @AliasFor(annotation = RequestMapping.class)
-    String[] headers() default {};
+  @AliasFor(annotation = RequestMapping.class)
+  String[] headers() default {};
 
-    @AliasFor(annotation = RequestMapping.class)
-    String[] consumes() default {};
+  @AliasFor(annotation = RequestMapping.class)
+  String[] consumes() default {};
 
-    @AliasFor(annotation = RequestMapping.class)
-    String[] produces() default {};
+  @AliasFor(annotation = RequestMapping.class)
+  String[] produces() default {};
 }
 ```
 
