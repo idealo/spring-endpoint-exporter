@@ -21,7 +21,7 @@ class SpringBootConsoleApplicationIT(
     private val exporterProperties: ExporterProperties
 ) {
 
-    private val expectedOutput = javaClass.getResourceAsStream("/expected-output.json")!!.readAllBytes().toString(StandardCharsets.UTF_8)
+    private val expectedOutput = javaClass.getResourceAsStream("/expected-output.json")!!.readAllBytes().toString(StandardCharsets.UTF_8).trim()
 
     @Test
     fun `should correctly export endpoints in scan mode FILE_SYSTEM`() {
