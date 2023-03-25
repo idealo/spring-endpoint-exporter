@@ -1,7 +1,7 @@
 package de.idealo.security.endpointexporter
 
-import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
+import org.skyscreamer.jsonassert.JSONAssert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.nio.charset.StandardCharsets
@@ -21,13 +21,13 @@ class SpringBootConsoleApplicationIT(
     private val exporterProperties: ExporterProperties
 ) {
 
-    private val expectedOutput = javaClass.getResourceAsStream("/expected-output.json")!!.readAllBytes().toString(StandardCharsets.UTF_8).trim()
+    private val expectedOutput = javaClass.getResourceAsStream("/expected-output.json")!!.readAllBytes().toString(StandardCharsets.UTF_8)
 
     @Test
     fun `should correctly export endpoints in scan mode FILE_SYSTEM`() {
 
         val output = exporterProperties.outputPath.readText(StandardCharsets.UTF_8)
 
-        assertThat(output).isEqualTo(expectedOutput)
+        JSONAssert.assertEquals(output, expectedOutput, true)
     }
 }
