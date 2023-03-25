@@ -1,0 +1,47 @@
+{
+    "openapi": "3.0.1",
+    "info": {
+        "title": "n/a",
+        "version": "n/a"
+    },
+    "paths": {
+        "/persons": {
+            "get": {
+                "summary": "summary",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-consumes": "*/*",
+                "x-produces": "*/*",
+                "x-declaring-class-name": "de.idealo.security.endpointexporter.test.PersonController",
+                "x-method-name": "getPersons"
+            }
+        },
+        "/persons/{firstName}": {
+            "get": {
+                "summary": "summary",
+                "parameters": [
+                    {
+                        "name": "firstName",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "string"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-consumes": "*/*",
+                "x-produces": "*/*",
+                "x-declaring-class-name": "de.idealo.security.endpointexporter.test.PersonController",
+                "x-method-name": "getPersonByFirstName"
+            }
+        }
+    }
+}
