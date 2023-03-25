@@ -37,6 +37,9 @@ jobs:
       - name: Run Tests
         run: mvn -B -ntp -Psonar-coverage verify
 
+      - name: Run Native Tests
+        run: mvn -B -ntp -PnativeTest verify
+
       - name: Create new release
         uses: cycjimmy/semantic-release-action@v3
         with:
