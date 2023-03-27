@@ -8,6 +8,9 @@ on:
       - 'src/**'
       - 'pom.xml'
 
+concurrency:
+  group: ci-main
+
 permissions:
   # used by semantic release
   contents: write
