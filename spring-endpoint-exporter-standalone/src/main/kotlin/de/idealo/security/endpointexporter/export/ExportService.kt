@@ -27,7 +27,7 @@ import kotlin.io.path.bufferedWriter
 class ExportService {
 
     fun writeAsOpenAPIDefinitions(
-        applicationMetadata: ApplicationMetadata?,
+        applicationMetadata: ApplicationMetadata,
         classToRequestMappings: Map<String, List<RequestMapping>>,
         outputPath: Path
     ) {
@@ -94,14 +94,13 @@ class ExportService {
             }
         }
 
-        val openAPI = OpenAPI().paths(paths)
-        if (applicationMetadata != null) {
-            openAPI.info(
+        val openAPI = OpenAPI()
+            .paths(paths)
+            .info(
                 Info()
                     .title(applicationMetadata.title)
                     .version(applicationMetadata.version)
             )
-        }
 
         outputPath.bufferedWriter().use { writer ->
             Json.pretty().writeValue(writer, openAPI)

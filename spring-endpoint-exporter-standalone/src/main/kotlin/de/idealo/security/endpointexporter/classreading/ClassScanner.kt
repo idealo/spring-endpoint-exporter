@@ -27,13 +27,8 @@ abstract class ClassScanner(
             return false
         }
 
-        // only include classes that match any include filter
-        if (this.includeFilters.any { it.matcher(classMetadata.name).matches() }) {
-            return true
-        }
-
-        // if no filter matches, exclude per default
-        return false
+        // only include classes that match any include filter, exclude per default
+        return this.includeFilters.any { it.matcher(classMetadata.name).matches() }
     }
 
     protected fun loadApplicationDataFromManifest(resourcePattern: String): ApplicationMetadata {

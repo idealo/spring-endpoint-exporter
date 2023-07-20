@@ -21,9 +21,9 @@ class RequestMappingProcessor(
     private val pathVariableProcessor: PathVariableProcessor,
     private val requestHeaderProcessor: RequestHeaderProcessor,
     private val responseStatusProcessor: ResponseStatusProcessor,
+    private val patternParser: PathPatternParser = PathPatternParser()
 ) : MetadataProcessor<ClassMetadata, List<RequestMapping>> {
 
-    private val patternParser: PathPatternParser = PathPatternParser()
     private val requestMappingAnnotations = listOf(
         RequestMappingAnnotation::class.qualifiedName!!,
         GetMapping::class.qualifiedName!!,
