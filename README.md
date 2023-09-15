@@ -73,7 +73,7 @@ java -jar ./spring-endpoint-exporter-1.0.4.jar --exporter.input-path="/data/app.
 Simply run the following command:
 
 ```
-mvn clean package
+./mvnw clean package
 ```
 
 You can now run the application using:
@@ -87,7 +87,7 @@ java -jar ./target/spring-endpoint-exporter-1.0.4.jar
 Make sure your docker daemon is running and run the following command:
 
 ```
-mvn clean spring-boot:build-image
+./mvnw clean spring-boot:build-image
 ```
 
 The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4`.
@@ -97,7 +97,7 @@ The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4`.
 Make sure your docker daemon is running and run the following command:
 
 ```
-mvn -Pnative clean spring-boot:build-image
+./mvnw -Pnative clean spring-boot:build-image
 ```
 
 The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4-native`.
