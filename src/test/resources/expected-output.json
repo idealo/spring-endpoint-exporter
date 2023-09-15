@@ -14,7 +14,7 @@
                     }
                 },
                 "x-consumes": "*/*",
-                "x-produces": "*/*",
+                "x-produces": "application/json",
                 "x-declaring-class-name": "de.idealo.security.endpointexporter.test.PersonController",
                 "x-method-name": "getPersons"
             }
@@ -38,7 +38,7 @@
                     }
                 },
                 "x-consumes": "*/*",
-                "x-produces": "*/*",
+                "x-produces": "application/xml",
                 "x-declaring-class-name": "de.idealo.security.endpointexporter.test.PersonController",
                 "x-method-name": "getPersonByFirstName"
             }

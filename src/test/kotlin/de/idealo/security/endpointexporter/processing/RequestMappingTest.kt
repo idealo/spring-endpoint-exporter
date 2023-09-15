@@ -135,4 +135,39 @@ internal class RequestMappingTest {
         assertThat(normalizedRequestMapping.declaringClassName).isEqualTo("TestClass")
         assertThat(normalizedRequestMapping.methodName).isEqualTo("testMethod")
     }
+
+    @Test
+    internal fun `should combine media types correctly`() {
+
+        val classLevelRequestMapping = RequestMapping(
+            urlPattern = pathPatternParser.parse("/test"),
+            httpMethods = emptySet(),
+            responseStatus = HttpStatus.OK,
+            requestParameters = emptyList(),
+            pathVariables = emptyList(),
+            requestHeaders = emptyList(),
+            consumes = emptyList(),
+            produces = listOf(MediaType.ALL_VALUE),
+            declaringClassName = "TestClass",
+            methodName = null
+        )
+
+        val methodLevelRequestMapping = RequestMapping(
+            urlPattern = pathPatternParser.parse("/{testId}"),
+            httpMethods = emptySet(),
+            responseStatus = HttpStatus.OK,
+            requestParameters = emptyList(),
+            pathVariables = emptyList(),
+            requestHeaders = emptyList(),
+            consumes = listOf(MediaType.APPLICATION_JSON_VALUE),
+            produces = emptyList(),
+            declaringClassName = "TestClass",
+            methodName = "testMethod"
+        )
+
+        val requestMapping = classLevelRequestMapping.combine(methodLevelRequestMapping)
+
+        assertThat(requestMapping.consumes).containsExactly(MediaType.APPLICATION_JSON_VALUE)
+        assertThat(requestMapping.produces).containsExactly(MediaType.ALL_VALUE)
+    }
 }

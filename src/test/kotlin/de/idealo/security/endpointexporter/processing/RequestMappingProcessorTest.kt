@@ -1,7 +1,11 @@
 package de.idealo.security.endpointexporter.processing
 
 import de.idealo.security.endpointexporter.classreading.MetadataReader
-import de.idealo.security.endpointexporter.classreading.type.*
+import de.idealo.security.endpointexporter.classreading.type.AnnotationMetadata
+import de.idealo.security.endpointexporter.classreading.type.ClassMetadata
+import de.idealo.security.endpointexporter.classreading.type.MethodMetadata
+import de.idealo.security.endpointexporter.classreading.type.ParameterMetadata
+import de.idealo.security.endpointexporter.classreading.type.Visibility
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
@@ -12,8 +16,12 @@ import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.PutMapping
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
+import org.springframework.web.bind.annotation.ResponseStatus
 import java.nio.file.Path
 import java.util.stream.Stream
 
@@ -47,14 +55,14 @@ internal class RequestMappingProcessorTest {
         assertThat(requestMappings[0].httpMethods).containsExactly(HttpMethod.GET)
         assertThat(requestMappings[0].urlPattern.patternString).isEqualTo("/persons")
         assertThat(requestMappings[0].consumes).containsExactly("*/*")
-        assertThat(requestMappings[0].produces).containsExactly("*/*")
+        assertThat(requestMappings[0].produces).containsExactly("application/json")
         assertThat(requestMappings[0].responseStatus).isEqualTo(HttpStatus.OK)
 
         assertThat(requestMappings[1].methodName).isEqualTo("getPersonByFirstName")
         assertThat(requestMappings[1].httpMethods).containsExactly(HttpMethod.GET)
         assertThat(requestMappings[1].urlPattern.patternString).isEqualTo("/persons/{firstName}")
         assertThat(requestMappings[1].consumes).containsExactly("*/*")
-        assertThat(requestMappings[1].produces).containsExactly("*/*")
+        assertThat(requestMappings[1].produces).containsExactly("application/xml")
         assertThat(requestMappings[1].responseStatus).isEqualTo(HttpStatus.OK)
         assertThat(requestMappings[1].pathVariables).hasSize(1)
         assertThat(requestMappings[1].pathVariables[0].name).isEqualTo("firstName")

@@ -29,7 +29,7 @@ class PersonController {
         return persons
     }
 
-    @GetMapping("/persons/{firstName}")
+    @GetMapping("/persons/{firstName}", produces = [MediaType.APPLICATION_XML_VALUE])
     fun getPersonByFirstName(@PathVariable firstName: String): Person? {
         return persons.find { person -> person.firstName == firstName }
     }

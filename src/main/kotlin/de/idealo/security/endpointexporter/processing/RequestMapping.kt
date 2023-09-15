@@ -45,8 +45,14 @@ data class RequestMapping(
             requestParameters = other.requestParameters,
             pathVariables = other.pathVariables,
             requestHeaders = this.requestHeaders,
-            consumes = other.consumes,
-            produces = other.produces,
+            consumes = when (other.consumes.isEmpty()) {
+                true -> consumes
+                false -> other.consumes
+            },
+            produces = when (other.produces.isEmpty()) {
+                true -> produces
+                false -> other.produces
+            },
             declaringClassName = other.declaringClassName,
             methodName = other.methodName
         )
