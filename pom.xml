@@ -40,7 +40,7 @@
 
         <asm.version>9.6</asm.version>
         <springdoc-openapi.version>2.2.0</springdoc-openapi.version>
-        <jacoco-maven-plugin.version>0.8.10</jacoco-maven-plugin.version>
+        <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     </properties>
 
     <dependencies>
