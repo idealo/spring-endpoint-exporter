@@ -21,7 +21,7 @@ Find the latest docker image [here](https://github.com/idealo/spring-endpoint-ex
 ```yaml
 services:
   spring-endpoint-exporter:
-    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.4
+    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.10
     mem_reservation: 256M
     mem_limit: 512M
     volumes:
@@ -57,13 +57,13 @@ You can pass properties to the application using environment variables or comman
 
 ```
 export EXPORTER_INPUT_PATH=/data/app.jar
-java -jar ./spring-endpoint-exporter-1.0.4.jar
+java -jar ./spring-endpoint-exporter-1.0.10.jar
 ```
 
 or
 
 ```
-java -jar ./spring-endpoint-exporter-1.0.4.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+java -jar ./spring-endpoint-exporter-1.0.10.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
 ```
 
 ## Building from source
@@ -79,7 +79,7 @@ Simply run the following command:
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-1.0.4.jar
+java -jar ./target/spring-endpoint-exporter-1.0.10.jar
 ```
 
 ### Docker Image
@@ -90,7 +90,7 @@ Make sure your docker daemon is running and run the following command:
 ./mvnw clean spring-boot:build-image
 ```
 
-The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4`.
+The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.10`.
 
 ### Native Docker Image (Beta)
 
@@ -100,7 +100,7 @@ Make sure your docker daemon is running and run the following command:
 ./mvnw -Pnative clean spring-boot:build-image
 ```
 
-The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.4-native`.
+The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.10-native`.
 
 ## Known limitations
 
@@ -114,26 +114,26 @@ Since this tool only accesses information from the bytecode, and thus does not l
 @RequestMapping(method = RequestMethod.GET)
 public @interface CustomRequestMapping {
 
-  @AliasFor(annotation = RequestMapping.class)
-  String name() default "";
+    @AliasFor(annotation = RequestMapping.class)
+    String name() default "";
 
-  @AliasFor(annotation = RequestMapping.class)
-  String[] value() default {};
+    @AliasFor(annotation = RequestMapping.class)
+    String[] value() default {};
 
-  @AliasFor(annotation = RequestMapping.class)
-  String[] path() default {};
+    @AliasFor(annotation = RequestMapping.class)
+    String[] path() default {};
 
-  @AliasFor(annotation = RequestMapping.class)
-  String[] params() default {};
+    @AliasFor(annotation = RequestMapping.class)
+    String[] params() default {};
 
-  @AliasFor(annotation = RequestMapping.class)
-  String[] headers() default {};
+    @AliasFor(annotation = RequestMapping.class)
+    String[] headers() default {};
 
-  @AliasFor(annotation = RequestMapping.class)
-  String[] consumes() default {};
+    @AliasFor(annotation = RequestMapping.class)
+    String[] consumes() default {};
 
-  @AliasFor(annotation = RequestMapping.class)
-  String[] produces() default {};
+    @AliasFor(annotation = RequestMapping.class)
+    String[] produces() default {};
 }
 ```
 
