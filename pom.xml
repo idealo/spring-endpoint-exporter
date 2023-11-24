@@ -13,7 +13,7 @@
 
     <groupId>de.idealo.security</groupId>
     <artifactId>spring-endpoint-exporter</artifactId>
-    <version>1.0.9</version>
+    <version>1.0.10</version>
 
     <licenses>
         <license>
@@ -125,7 +125,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder:tiny</builder>
+                        <builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                         </env>
