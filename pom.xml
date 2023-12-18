@@ -35,8 +35,8 @@
         <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}</image.name>
 
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.8.22</kotlin.version>
-        <java.version>17</java.version>
+        <kotlin.version>1.9.21</kotlin.version>
+        <java.version>21</java.version>
 
         <asm.version>9.7</asm.version>
         <springdoc-openapi.version>2.4.0</springdoc-openapi.version>
@@ -222,7 +222,7 @@
                         <configuration>
                             <image>
                                 <env>
-                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar --strict-image-heap</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
                                 </env>
                             </image>
                         </configuration>
