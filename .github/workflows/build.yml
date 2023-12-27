@@ -58,7 +58,6 @@ jobs:
         with:
           java-version: '21'
           distribution: 'graalvm-community'
-          components: 'native-image'
 
       - name: Run tests
         run: mvn -B -ntp -PnativeTest verify
