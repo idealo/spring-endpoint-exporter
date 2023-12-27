@@ -41,6 +41,8 @@
         <asm.version>9.7</asm.version>
         <springdoc-openapi.version>2.4.0</springdoc-openapi.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
+
+        <native-image-build-arguments>--enable-url-protocols=jar --strict-image-heap</native-image-build-arguments>
     </properties>
 
     <dependencies>
@@ -222,7 +224,29 @@
                         <configuration>
                             <image>
                                 <env>
-                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar --strict-image-heap</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>${native-image-build-arguments}</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
+                                </env>
+                            </image>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>nativeTest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.springframework.boot</groupId>
+                        <artifactId>spring-boot-maven-plugin</artifactId>
+                        <configuration>
+                            <image>
+                                <env>
+                                    <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>${native-image-build-arguments}</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
                                 </env>
                             </image>
                         </configuration>
