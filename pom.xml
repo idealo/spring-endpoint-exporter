@@ -238,7 +238,7 @@
                         <groupId>org.graalvm.buildtools</groupId>
                         <artifactId>native-maven-plugin</artifactId>
                         <configuration>
-                            <buildArgs>
+                            <buildArgs combine.children="append">
                                 <arg>--strict-image-heap</arg>
                             </buildArgs>
                         </configuration>
