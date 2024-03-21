@@ -7,7 +7,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.1</version>
+        <version>3.2.3</version>
         <relativePath/>
     </parent>
 
@@ -35,11 +35,11 @@
         <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}</image.name>
 
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.9.21</kotlin.version>
+        <kotlin.version>1.9.23</kotlin.version>
         <java.version>17</java.version>
 
         <asm.version>9.6</asm.version>
-        <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
+        <springdoc-openapi.version>2.4.0</springdoc-openapi.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     </properties>
 
@@ -125,7 +125,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
+                        <builder>paketobuildpacks/builder-jammy-tiny:0.0.237</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                         </env>
