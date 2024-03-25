@@ -38,7 +38,7 @@
         <kotlin.version>1.8.22</kotlin.version>
         <java.version>17</java.version>
 
-        <asm.version>9.6</asm.version>
+        <asm.version>9.7</asm.version>
         <springdoc-openapi.version>2.3.0</springdoc-openapi.version>
         <jacoco-maven-plugin.version>0.8.11</jacoco-maven-plugin.version>
     </properties>
