@@ -21,7 +21,7 @@ Find the latest docker image [here](https://github.com/idealo/spring-endpoint-ex
 ```yaml
 services:
   spring-endpoint-exporter:
-    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.10
+    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.11
     mem_reservation: 256M
     mem_limit: 512M
     volumes:
@@ -57,13 +57,13 @@ You can pass properties to the application using environment variables or comman
 
 ```
 export EXPORTER_INPUT_PATH=/data/app.jar
-java -jar ./spring-endpoint-exporter-1.0.10.jar
+java -jar ./spring-endpoint-exporter-1.0.11.jar
 ```
 
 or
 
 ```
-java -jar ./spring-endpoint-exporter-1.0.10.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+java -jar ./spring-endpoint-exporter-1.0.11.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
 ```
 
 ## Building from source
@@ -79,7 +79,7 @@ Simply run the following command:
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-1.0.10.jar
+java -jar ./target/spring-endpoint-exporter-1.0.11.jar
 ```
 
 ### Docker Image
@@ -90,9 +90,13 @@ Make sure your docker daemon is running and run the following command:
 ./mvnw clean spring-boot:build-image
 ```
 
-The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.10`.
+The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.11`.
 
 ### Native Docker Image (Beta)
+
+| ⓘ Note                                                                     |
+|:---------------------------------------------------------------------------|
+| The native image is currently only compatible with the `x86` architecture. |
 
 Make sure your docker daemon is running and run the following command:
 
@@ -100,7 +104,7 @@ Make sure your docker daemon is running and run the following command:
 ./mvnw -Pnative clean spring-boot:build-image
 ```
 
-The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.10-native`.
+The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.11-native`.
 
 ## Known limitations
 

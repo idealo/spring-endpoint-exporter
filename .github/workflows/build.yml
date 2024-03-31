@@ -38,7 +38,7 @@ jobs:
           cache: maven
 
       - name: Run Tests
-        run: mvn -B -ntp -Psonar-coverage verify
+        run: mvn -B -ntp verify
 
   verify-native:
     strategy:
