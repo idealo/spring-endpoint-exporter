@@ -13,7 +13,7 @@
 
     <groupId>de.idealo.security</groupId>
     <artifactId>spring-endpoint-exporter</artifactId>
-    <version>1.0.11</version>
+    <version>1.0.12-next.1</version>
 
     <licenses>
         <license>
@@ -35,7 +35,7 @@
         <image.name>ghcr.io/idealo/${project.artifactId}:${project.version}</image.name>
 
         <kotlin.code.style>official</kotlin.code.style>
-        <kotlin.version>1.8.22</kotlin.version>
+        <kotlin.version>1.9.23</kotlin.version>
         <java.version>17</java.version>
 
         <asm.version>9.7</asm.version>
@@ -125,9 +125,10 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-jammy-tiny:latest</builder>
+                        <builder>paketobuildpacks/builder-jammy-tiny:0.0.239</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
+                            <BP_JVM_VERSION>21</BP_JVM_VERSION> <!-- required so that GraalVM 21 is used -->
                         </env>
                     </image>
                 </configuration>
@@ -140,47 +141,6 @@
     </build>
 
     <profiles>
-        <profile>
-            <id>sonar-coverage</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.jacoco</groupId>
-                        <artifactId>jacoco-maven-plugin</artifactId>
-                        <version>${jacoco-maven-plugin.version}</version>
-                        <executions>
-                            <execution>
-                                <id>agent-for-ut</id>
-                                <goals>
-                                    <goal>prepare-agent</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>agent-for-it</id>
-                                <goals>
-                                    <goal>prepare-agent-integration</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>default-report-ut</id>
-                                <goals>
-                                    <goal>report</goal>
-                                </goals>
-                            </execution>
-                            <execution>
-                                <id>default-report-it</id>
-                                <goals>
-                                    <goal>report-integration</goal>
-                                </goals>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <append>true</append>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
         <profile>
             <id>publish-ghcr</id>
             <build>
@@ -213,10 +173,6 @@
             <build>
                 <plugins>
                     <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                    </plugin>
-                    <plugin>
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
@@ -225,6 +181,27 @@
                                     <BP_NATIVE_IMAGE_BUILD_ARGUMENTS>--enable-url-protocols=jar</BP_NATIVE_IMAGE_BUILD_ARGUMENTS>
                                 </env>
                             </image>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>nativeTest</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.graalvm.buildtools</groupId>
+                        <artifactId>native-maven-plugin</artifactId>
+                        <configuration>
+                            <buildArgs combine.children="append">
+                                <!-- Workaround for https://github.com/oracle/graal/issues/6957 -->
+                                <arg>--strict-image-heap</arg>
+                            </buildArgs>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -239,6 +216,7 @@
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
                             <image>
+                                <!-- Might be obsolete soon as https://github.com/paketo-buildpacks/native-image/releases/tag/v5.13.0 introduced arm support -->
                                 <builder>dashaun/builder:tiny</builder>
                             </image>
                         </configuration>
