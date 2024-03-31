@@ -43,9 +43,8 @@ jobs:
 
       - uses: graalvm/setup-graalvm@v1
         with:
-          java-version: '17'
+          java-version: '21'
           distribution: 'graalvm-community'
-          components: 'native-image'
 
       - name: Run tests
         run: mvn -B -ntp -PnativeTest verify
