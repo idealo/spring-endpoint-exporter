@@ -45,6 +45,7 @@ jobs:
           - ubuntu-latest
           - windows-latest
           - macos-13
+          - macos-latest
     name: Verify ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
     steps:
