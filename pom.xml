@@ -125,7 +125,7 @@
                 <configuration>
                     <image>
                         <name>${image.name}</name>
-                        <builder>paketobuildpacks/builder-jammy-tiny:0.0.247</builder>
+                        <builder>paketobuildpacks/builder-jammy-java-tiny:0.0.23</builder>
                         <env>
                             <BP_OCI_SOURCE>${project.scm.url}</BP_OCI_SOURCE>
                             <BP_JVM_VERSION>21</BP_JVM_VERSION> <!-- required so that GraalVM 21 is used -->
@@ -202,23 +202,6 @@
                                 <!-- Workaround for https://github.com/oracle/graal/issues/6957 -->
                                 <arg>--strict-image-heap</arg>
                             </buildArgs>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-        <profile>
-            <id>arm64</id>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.springframework.boot</groupId>
-                        <artifactId>spring-boot-maven-plugin</artifactId>
-                        <configuration>
-                            <image>
-                                <!-- Might be obsolete soon as https://github.com/paketo-buildpacks/native-image/releases/tag/v5.13.0 introduced arm support -->
-                                <builder>dashaun/builder:tiny</builder>
-                            </image>
                         </configuration>
                     </plugin>
                 </plugins>
