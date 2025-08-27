@@ -87,10 +87,10 @@ class ExportService {
             )
 
             requestMapping.httpMethods.forEach { httpMethod ->
-                paths.addPathItem(
-                    requestMapping.urlPattern.patternString,
-                    mapHttpMethodToOperation(httpMethod).invoke(PathItem(), operation)
-                )
+                val pathString = requestMapping.urlPattern.patternString
+                val existingPathItem = paths.get(pathString) ?: PathItem()
+                mapHttpMethodToOperation(httpMethod).invoke(existingPathItem, operation)
+                paths.addPathItem(pathString, existingPathItem)
             }
         }
 
