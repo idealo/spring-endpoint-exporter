@@ -22,7 +22,7 @@ internal class MetadataReaderTest {
 
         assertThat(classMetadata).isNotNull
         assertThat(classMetadata.name).isEqualTo("de.idealo.security.endpointexporter.test.PersonController")
-        assertThat(classMetadata.methods).hasSize(3)
+        assertThat(classMetadata.methods).hasSize(4)
 
         // find all methods that are not constructors or static initialization blocks
         val methods = classMetadata.methods.filter { it.name != "<init>" && it.name != "<cinit>" }
@@ -38,7 +38,7 @@ internal class MetadataReaderTest {
         assertThat(getPersonsGetMappingAnnotation.attributes).hasSize(1)
         assertThat(getPersonsGetMappingAnnotation.getStringArray("value")).containsExactly("/persons")
 
-        val getPersonByFirstNameMethod = methods.last()
+        val getPersonByFirstNameMethod = methods.drop(1).first()
         assertThat(getPersonByFirstNameMethod.name).isEqualTo("getPersonByFirstName")
         assertThat(getPersonByFirstNameMethod.visibility).isEqualTo(Visibility.PUBLIC)
         assertThat(getPersonByFirstNameMethod.getAnnotations()).hasSize(1)
@@ -52,5 +52,16 @@ internal class MetadataReaderTest {
         val getPersonByFirstNameParameterAnnotation = getPersonByFirstNameParameter.getAnnotations()[0]
         assertThat(getPersonByFirstNameParameterAnnotation.name).isEqualTo("org.springframework.web.bind.annotation.PathVariable")
         assertThat(getPersonByFirstNameParameterAnnotation.attributes).isEmpty()
+
+        val doSomethingWithPersonsMethod = methods.last()
+        assertThat(doSomethingWithPersonsMethod.name).isEqualTo("doSomethingWithPersons")
+        assertThat(doSomethingWithPersonsMethod.visibility).isEqualTo(Visibility.PUBLIC)
+        assertThat(doSomethingWithPersonsMethod.getAnnotations()).hasSize(1)
+        assertThat(doSomethingWithPersonsMethod.parameters).isEmpty()
+
+        val doSomethingWithPersonsMethodPostMappingAnnotation = doSomethingWithPersonsMethod.getAnnotations()[0]
+        assertThat(doSomethingWithPersonsMethodPostMappingAnnotation.name).isEqualTo("org.springframework.web.bind.annotation.PostMapping")
+        assertThat(doSomethingWithPersonsMethodPostMappingAnnotation.attributes).hasSize(1)
+        assertThat(doSomethingWithPersonsMethodPostMappingAnnotation.getStringArray("value")).containsExactly("/persons")
     }
 }

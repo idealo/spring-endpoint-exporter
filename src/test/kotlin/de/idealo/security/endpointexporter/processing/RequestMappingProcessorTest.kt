@@ -46,7 +46,7 @@ internal class RequestMappingProcessorTest {
 
         val requestMappings = requestMappingProcessor.process(metadataReader.classMetadata)
 
-        assertThat(requestMappings).hasSize(2)
+        assertThat(requestMappings).hasSize(3)
         assertThat(requestMappings).allMatch { requestMapping ->
             requestMapping.declaringClassName == "de.idealo.security.endpointexporter.test.PersonController"
         }
@@ -68,6 +68,13 @@ internal class RequestMappingProcessorTest {
         assertThat(requestMappings[1].pathVariables[0].name).isEqualTo("firstName")
         assertThat(requestMappings[1].pathVariables[0].type).isEqualTo("java.lang.String")
         assertThat(requestMappings[1].pathVariables[0].required).isTrue
+
+        assertThat(requestMappings[2].methodName).isEqualTo("doSomethingWithPersons")
+        assertThat(requestMappings[2].httpMethods).containsExactly(HttpMethod.POST)
+        assertThat(requestMappings[2].urlPattern.patternString).isEqualTo("/persons")
+        assertThat(requestMappings[2].consumes).containsExactly("*/*")
+        assertThat(requestMappings[2].produces).containsExactly("application/json")
+        assertThat(requestMappings[2].responseStatus).isEqualTo(HttpStatus.OK)
     }
 
     @Test

@@ -3,6 +3,7 @@ package de.idealo.security.endpointexporter.test
 import org.springframework.http.MediaType
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
+import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -32,5 +33,10 @@ class PersonController {
     @GetMapping("/persons/{firstName}", produces = [MediaType.APPLICATION_XML_VALUE])
     fun getPersonByFirstName(@PathVariable firstName: String): Person? {
         return persons.find { person -> person.firstName == firstName }
+    }
+
+    @PostMapping("/persons")
+    fun doSomethingWithPersons() {
+        // noop - just used in tests
     }
 }

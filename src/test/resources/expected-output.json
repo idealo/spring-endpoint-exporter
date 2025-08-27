@@ -17,6 +17,18 @@
                 "x-produces": "application/json",
                 "x-declaring-class-name": "de.idealo.security.endpointexporter.test.PersonController",
                 "x-method-name": "getPersons"
+            },
+            "post": {
+                "summary": "summary",
+                "responses": {
+                    "200": {
+                        "description": "OK"
+                    }
+                },
+                "x-consumes": "*/*",
+                "x-produces": "application/json",
+                "x-declaring-class-name": "de.idealo.security.endpointexporter.test.PersonController",
+                "x-method-name": "doSomethingWithPersons"
             }
         },
         "/persons/{firstName}": {
