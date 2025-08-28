@@ -35,7 +35,7 @@ class ExportService {
         val paths = Paths()
         classToRequestMappings.values.flatten().forEach { requestMapping ->
 
-            val operation = Operation().summary("summary")
+            val operation = Operation()
 
             requestMapping.requestParameters.forEach { requestParameter ->
                 operation.addParametersItem(
