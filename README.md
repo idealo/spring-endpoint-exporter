@@ -21,9 +21,9 @@ Find the latest docker image [here](https://github.com/idealo/spring-endpoint-ex
 ```yaml
 services:
   spring-endpoint-exporter:
-    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.12
-    mem_reservation: 256M
-    mem_limit: 512M
+    image: ghcr.io/idealo/spring-endpoint-exporter:1.0.25-native
+    mem_reservation: 64M
+    mem_limit: 128M
     volumes:
       - /path/to/your/jar:/data
     environment:
@@ -36,12 +36,6 @@ The above configuration would extract all spring endpoints inside the `de.idealo
 to `/path/to/your/jar/out.json`.
 
 Please note that the container uses user `1000:1000`. Make sure that this user has read and write permissions on the volume, in this case `/path/to/your/jar`.
-
-### Native Docker Image (Beta)
-
-The Spring Endpoint Exporter is also available as a native executable built with GraalVM Native Image. The native executable should behave exactly the same as
-the JVM version but requires less memory and is overall faster. Please [file a new issue](https://github.com/idealo/spring-endpoint-exporter/issues/new/choose)
-if you notice any differences.
 
 ## Configuration Properties
 
@@ -57,13 +51,13 @@ You can pass properties to the application using environment variables or comman
 
 ```
 export EXPORTER_INPUT_PATH=/data/app.jar
-java -jar ./spring-endpoint-exporter-1.0.12.jar
+java -jar ./spring-endpoint-exporter-1.0.25.jar
 ```
 
 or
 
 ```
-java -jar ./spring-endpoint-exporter-1.0.12.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
+java -jar ./spring-endpoint-exporter-1.0.25.jar --exporter.input-path="/data/app.jar" --exporter.include-filters="de.idealo.*"
 ```
 
 ## Building from source
@@ -79,7 +73,7 @@ Simply run the following command:
 You can now run the application using:
 
 ```
-java -jar ./target/spring-endpoint-exporter-1.0.12.jar
+java -jar ./target/spring-endpoint-exporter-1.0.25.jar
 ```
 
 ### Docker Image
@@ -90,9 +84,9 @@ Make sure your docker daemon is running and run the following command:
 ./mvnw clean spring-boot:build-image
 ```
 
-The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.12`.
+The resulting image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.25`.
 
-### Native Docker Image (Beta)
+### Native Docker Image
 
 | ⓘ Note                                                                     |
 |:---------------------------------------------------------------------------|
@@ -104,14 +98,14 @@ Make sure your docker daemon is running and run the following command:
 ./mvnw -Pnative clean spring-boot:build-image
 ```
 
-The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.12-native`.
+The resulting native image is named `ghcr.io/idealo/spring-endpoint-exporter:1.0.25-native`.
 
 ## Known limitations
 
 Since this tool only accesses information from the bytecode, and thus does not load classes, it does not pick up custom `@RequestMapping` annotations, e.g.:
 
+[//]: # (@formatter:off)
 ```java
-
 @Documented
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
@@ -140,6 +134,7 @@ public @interface CustomRequestMapping {
     String[] produces() default {};
 }
 ```
+[//]: # (@formatter:on)
 
 However, it correctly handles the builtin variants of `@RequestMapping`, e.g.: `@GetMapping`, `@PostMapping`, `@PutMapping`, `@DeleteMapping`
 and `@PatchMapping`.
