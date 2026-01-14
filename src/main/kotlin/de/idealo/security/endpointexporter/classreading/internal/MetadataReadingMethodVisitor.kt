@@ -13,8 +13,6 @@ internal class MetadataReadingMethodVisitor(
     private val access: Int,
     private val name: String,
     private val descriptor: String,
-    private val signature: String?,
-    private val exceptions: Array<out String>?,
     private val callback: (MethodMetadata) -> Unit
 ) : MethodVisitor(Opcodes.ASM9) {
 

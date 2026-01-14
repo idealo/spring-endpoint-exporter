@@ -24,11 +24,11 @@ internal class ExporterPropertiesTest {
     @Test
     internal fun shouldBeValidWhenExcludeFiltersArePresent() {
 
-        val exporterProperties = getValidExportProperties().apply {
+        val exporterProperties = getValidExportProperties(
             excludeFilters = setOf(
                 Pattern.compile("org.springframework.*")
             )
-        }
+        )
 
         val constraintViolations = validator.validate(exporterProperties)
 
@@ -38,23 +38,28 @@ internal class ExporterPropertiesTest {
     @Test
     internal fun shouldBeInvalidWhenIncludeFiltersIsEmpty() {
 
-        val exporterProperties = getValidExportProperties().apply {
+        val exporterProperties = getValidExportProperties(
             includeFilters = emptySet()
-        }
+        )
 
         val constraintViolations = validator.validate(exporterProperties)
 
         assertThat(constraintViolations).hasSize(1)
     }
 
-    private fun getValidExportProperties(): ExporterProperties {
-        return ExporterProperties().apply {
-            scanMode = ScanMode.JAR
-            inputPath = Path.of("./app.jar")
-            outputPath = Path.of("out.json")
-            includeFilters = setOf(
-                Pattern.compile("de.idealo.*")
-            )
-        }
+    private fun getValidExportProperties(
+        scanMode: ScanMode = ScanMode.JAR,
+        inputPath: Path = Path.of("./app.jar"),
+        outputPath: Path = Path.of("./out.json"),
+        includeFilters: Set<Pattern> = setOf(Pattern.compile("de.idealo.*")),
+        excludeFilters: Set<Pattern> = emptySet()
+    ): ExporterProperties {
+        return ExporterProperties(
+            scanMode = scanMode,
+            inputPath = inputPath,
+            outputPath = outputPath,
+            includeFilters = includeFilters,
+            excludeFilters = excludeFilters
+        )
     }
 }
