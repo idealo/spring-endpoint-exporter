@@ -3,7 +3,7 @@ package de.idealo.security.endpointexporter.classreading
 import de.idealo.security.endpointexporter.classreading.type.Visibility
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
-import org.springframework.core.io.PathResource
+import org.springframework.core.io.FileSystemResource
 import java.nio.file.Path
 
 internal class MetadataReaderTest {
@@ -16,7 +16,7 @@ internal class MetadataReaderTest {
     @Test
     internal fun `should read class metadata`() {
 
-        val metadataReader = MetadataReader(PathResource(testControllerClass))
+        val metadataReader = MetadataReader(FileSystemResource(testControllerClass))
 
         val classMetadata = metadataReader.classMetadata
 

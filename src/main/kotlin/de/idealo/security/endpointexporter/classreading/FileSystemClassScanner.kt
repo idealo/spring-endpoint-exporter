@@ -22,7 +22,7 @@ class FileSystemClassScanner(
     override fun scan(entrypoint: Path): List<ClassMetadata> {
 
         // pattern to find all class files in a directory
-        // note: Path.resolve with wildcards (aka. *) does not work on windows
+        // note: Path.resolve with wildcards (aka. *) does not work on Windows
         val resourcePattern = "file:${entrypoint.normalize().pathString}/**/*.class"
 
         // get the resources

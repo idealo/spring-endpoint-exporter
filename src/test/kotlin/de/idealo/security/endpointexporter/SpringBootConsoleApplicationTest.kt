@@ -5,7 +5,6 @@ import org.skyscreamer.jsonassert.JSONAssert
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import java.nio.charset.StandardCharsets
-import java.nio.file.Path
 import kotlin.io.path.readText
 
 @SpringBootTest(
@@ -18,11 +17,11 @@ import kotlin.io.path.readText
     webEnvironment = SpringBootTest.WebEnvironment.NONE
 )
 class SpringBootConsoleApplicationTest(
-    @Autowired
+    @param:Autowired
     private val exporterProperties: ExporterProperties
 ) {
 
-    private val expectedOutput = Path.of("target/test-classes/expected-output.json").readText(StandardCharsets.UTF_8)
+    private val expectedOutput = SpringBootConsoleApplicationTest::class.java.getResource("/expected-output.json")!!.readText(StandardCharsets.UTF_8)
 
     @Test
     fun `should correctly export endpoints in scan mode FILE_SYSTEM`() {

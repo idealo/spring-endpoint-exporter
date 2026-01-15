@@ -11,7 +11,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.Arguments
 import org.junit.jupiter.params.provider.MethodSource
-import org.springframework.core.io.PathResource
+import org.springframework.core.io.FileSystemResource
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 import org.springframework.http.MediaType
@@ -42,7 +42,7 @@ internal class RequestMappingProcessorTest {
     @Test
     internal fun `should extract RequestMapping from actual class file`() {
 
-        val metadataReader = MetadataReader(PathResource(testControllerClass))
+        val metadataReader = MetadataReader(FileSystemResource(testControllerClass))
 
         val requestMappings = requestMappingProcessor.process(metadataReader.classMetadata)
 

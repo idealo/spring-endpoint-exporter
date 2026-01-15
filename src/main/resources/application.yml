@@ -2,10 +2,3 @@ spring:
   main:
     web-application-type: none
     banner-mode: off
-
-exporter:
-  scan-mode: JAR
-  input-path: ~
-  output-path: ./open-api.json
-  include-filters: ~
-  exclude-filters: ~
