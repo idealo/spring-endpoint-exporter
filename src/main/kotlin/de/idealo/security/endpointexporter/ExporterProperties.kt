@@ -11,16 +11,16 @@ import java.util.regex.Pattern
 @ConfigurationProperties("exporter")
 class ExporterProperties(
     @field:NotNull
-    val scanMode: ScanMode = ScanMode.JAR,
+    val scanMode: ScanMode? = ScanMode.JAR,
 
     @field:NotNull
-    val inputPath: Path,
+    val inputPath: Path? = null,
 
     @field:NotNull
-    val outputPath: Path = Path.of("./open-api.json"),
+    val outputPath: Path? = Path.of("./open-api.json"),
 
     @field:NotEmpty
-    val includeFilters: Set<@NotNull Pattern>,
+    val includeFilters: Set<@NotNull Pattern> = emptySet(),
 
     val excludeFilters: Set<@NotNull Pattern> = emptySet()
 ) {

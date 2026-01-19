@@ -26,7 +26,7 @@ class SpringBootConsoleApplicationTest(
     @Test
     fun `should correctly export endpoints in scan mode FILE_SYSTEM`() {
 
-        val output = exporterProperties.outputPath.readText(StandardCharsets.UTF_8)
+        val output = exporterProperties.outputPath!!.readText(StandardCharsets.UTF_8)
 
         JSONAssert.assertEquals(output, expectedOutput, true)
     }
