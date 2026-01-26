@@ -9,21 +9,21 @@ import java.util.regex.Pattern
 
 @Validated
 @ConfigurationProperties("exporter")
-class ExporterProperties {
+class ExporterProperties(
+    @field:NotNull
+    val scanMode: ScanMode? = ScanMode.JAR,
 
     @field:NotNull
-    lateinit var scanMode: ScanMode
+    val inputPath: Path? = null,
 
     @field:NotNull
-    lateinit var inputPath: Path
-
-    @field:NotNull
-    lateinit var outputPath: Path
+    val outputPath: Path? = Path.of("./open-api.json"),
 
     @field:NotEmpty
-    lateinit var includeFilters: Set<@NotNull Pattern>
+    val includeFilters: Set<@NotNull Pattern> = emptySet(),
 
-    lateinit var excludeFilters: Set<@NotNull Pattern>
+    val excludeFilters: Set<@NotNull Pattern> = emptySet()
+) {
 
     enum class ScanMode {
         JAR,

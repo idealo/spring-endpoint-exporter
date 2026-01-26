@@ -32,8 +32,6 @@ internal class MetadataReadingClassVisitor : ClassVisitor(Opcodes.ASM9) {
             access = access,
             name = name,
             descriptor = desc,
-            signature = signature,
-            exceptions = exceptions,
             callback = methods::add
         )
     }

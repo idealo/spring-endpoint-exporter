@@ -27,7 +27,7 @@ internal class RequestHeaderProcessorTest {
         assertThat(requestParameters)
             .hasSize(1)
             .extracting(RequestMapping.RequestHeader::name, RequestMapping.RequestHeader::type)
-            .containsExactly(tuple(name, type));
+            .containsExactly(tuple(name, type))
     }
 
     @Test
@@ -42,7 +42,7 @@ internal class RequestHeaderProcessorTest {
         assertThat(requestParameters)
             .hasSize(1)
             .extracting(RequestMapping.RequestHeader::name, RequestMapping.RequestHeader::type)
-            .containsExactly(tuple(paramName, type));
+            .containsExactly(tuple(paramName, type))
     }
 
     /**
@@ -60,7 +60,7 @@ internal class RequestHeaderProcessorTest {
         assertThat(requestParameters)
             .hasSize(1)
             .extracting(RequestMapping.RequestHeader::name, RequestMapping.RequestHeader::required)
-            .containsExactly(tuple(name, required));
+            .containsExactly(tuple(name, required))
     }
 
     /**
@@ -77,7 +77,7 @@ internal class RequestHeaderProcessorTest {
         assertThat(requestParameters)
             .hasSize(1)
             .extracting(RequestMapping.RequestHeader::name, RequestMapping.RequestHeader::required)
-            .containsExactly(tuple(name, false));
+            .containsExactly(tuple(name, false))
     }
 
     /**
@@ -93,7 +93,7 @@ internal class RequestHeaderProcessorTest {
         assertThat(requestParameters)
             .hasSize(1)
             .extracting(RequestMapping.RequestHeader::name, RequestMapping.RequestHeader::required)
-            .containsExactly(tuple(name, true));
+            .containsExactly(tuple(name, true))
     }
 
     @Test

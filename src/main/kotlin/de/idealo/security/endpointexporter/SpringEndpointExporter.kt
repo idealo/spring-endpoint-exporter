@@ -30,7 +30,7 @@ class SpringBootConsoleApplication(
 
     override fun run(args: ApplicationArguments) {
 
-        val scanner = when (exporterProperties.scanMode) {
+        val scanner = when (exporterProperties.scanMode!!) {
             ScanMode.JAR -> JarClassScanner(
                 includeFilters = exporterProperties.includeFilters,
                 excludeFilters = exporterProperties.excludeFilters
@@ -42,9 +42,9 @@ class SpringBootConsoleApplication(
             )
         }
 
-        val applicationData = scanner.scanApplicationData(exporterProperties.inputPath)
+        val applicationData = scanner.scanApplicationData(exporterProperties.inputPath!!)
 
-        val scanResult = scanner.scan(exporterProperties.inputPath)
+        val scanResult = scanner.scan(exporterProperties.inputPath!!)
 
         log.info("Processing ${scanResult.size} classes using ${scanner.javaClass.simpleName}...")
 
@@ -55,6 +55,6 @@ class SpringBootConsoleApplication(
 
         log.info("Found ${classToRequestMappings.values.flatten().count()} RequestMappings.")
 
-        exportService.writeAsOpenAPIDefinitions(applicationData, classToRequestMappings, exporterProperties.outputPath)
+        exportService.writeAsOpenAPIDefinitions(applicationData, classToRequestMappings, exporterProperties.outputPath!!)
     }
 }
